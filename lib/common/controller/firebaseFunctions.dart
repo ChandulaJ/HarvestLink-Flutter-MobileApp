@@ -5,8 +5,30 @@ class FirestoreServices {
     await FirebaseFirestore.instance
         .collection('Customers')
         .doc(uid)
-        .set({'Email': email, 'Name': name, 'Address': '', 'Phone number': ''});
+        .set({
+      'Email': email,
+      'Name': name,
+      'Address': '',
+      'Phone number': '',
+    })
+        .then((_) async {
+
+      DocumentReference cartItemsRef = FirebaseFirestore.instance
+          .collection('Customers')
+          .doc(uid)
+          .collection('cartItems')
+          .doc();
+
+      await cartItemsRef.set({
+        'ProductId': '', // Replace with actual product ID
+        'NetPrice': 0.0, // Replace with actual net price
+        'ProductQuantity': 0, // Replace with actual product quantity
+        'UnitPrice': 0.0, // Replace with actual unit price
+      });
+    });
   }
+
+
 
   static saveFarmer(String name, email, uid) async {
     await FirebaseFirestore.instance
