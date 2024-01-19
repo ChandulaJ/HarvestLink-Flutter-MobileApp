@@ -9,7 +9,7 @@ class CustomerRepository extends GetxController{
   final _db = FirebaseFirestore.instance;
 
 
-  static Future<void> addToCustomerCart({required String customerId,required String productId,required double netPrice,required int productQuantity,required double unitPrice}) async {
+  static Future<void> addToCustomerCart({required String customerId,required String? productId,required double netPrice,required int productQuantity,required double unitPrice}) async {
     try {
 
       CollectionReference cartItemsRef = FirebaseFirestore.instance

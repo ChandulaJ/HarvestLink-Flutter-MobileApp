@@ -12,15 +12,19 @@ class ProductListedPage extends StatefulWidget {
   final String farmerImage;
   final String farmerName;
 
-  ProductListedPage({required this.farmerId,required this.farmerName, required this.farmerImage,super.key});
+  ProductListedPage(
+      {required this.farmerId,
+      required this.farmerName,
+      required this.farmerImage,
+      super.key});
 
   @override
   State<ProductListedPage> createState() => _ProductListedPageState();
 }
 
 class _ProductListedPageState extends State<ProductListedPage> {
-  final ProductListPageController productListPageController = Get.put(
-      ProductListPageController());
+  final ProductListPageController productListPageController =
+      Get.put(ProductListPageController());
 
   @override
   void initState() {
@@ -35,74 +39,72 @@ class _ProductListedPageState extends State<ProductListedPage> {
       appBar: AppBar(
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0.0,
-      backgroundColor: Colors.transparent,),
-        body: Column(
-          children: [
-            Container(height: 200.0,
-              width: double.maxFinite,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(10.0),
-                image: widget.farmerImage.isNotEmpty
-                    ? DecorationImage(
-                  fit: BoxFit.cover,
-                  image: NetworkImage(widget.farmerImage),
-                )
-                    : DecorationImage(
-                  fit: BoxFit.cover,
-                  image: AssetImage(
-                      'lib/customerSide/view/images/default_product_img.jpg'),
-                ), // Replace with your dummy image asset path
-              ),),
-            SizedBox(height: 10.0,),
-            Align(
-              alignment: Alignment.topLeft,
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 20.0),
-                child: Text(
-                  widget.farmerName,
-                  style: GoogleFonts.alata(
-                    fontWeight: FontWeight.w500,
-                    color: Colors.green.shade900,
-                    fontSize: 30.0,
-                  ),
-
+        backgroundColor: Colors.transparent,
+      ),
+      body: Column(
+        children: [
+          Container(
+            height: 200.0,
+            width: double.maxFinite,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(10.0),
+              image: widget.farmerImage.isNotEmpty
+                  ? DecorationImage(
+                      fit: BoxFit.cover,
+                      image: NetworkImage(widget.farmerImage),
+                    )
+                  : DecorationImage(
+                      fit: BoxFit.cover,
+                      image: AssetImage(
+                          'lib/customerSide/view/images/default_product_img.jpg'),
+                    ), // Replace with your dummy image asset path
+            ),
+          ),
+          SizedBox(
+            height: 10.0,
+          ),
+          Align(
+            alignment: Alignment.topLeft,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 20.0),
+              child: Text(
+                widget.farmerName,
+                style: GoogleFonts.alata(
+                  fontWeight: FontWeight.w500,
+                  color: Colors.green.shade900,
+                  fontSize: 30.0,
                 ),
               ),
             ),
-            Expanded(
-              child: Obx(() {
-              
-                List<MarketProductDataModel> productList =
-                    productListPageController.farmerProducts;
-                return ListView.builder(
-                  itemCount: productList.length,
-                  itemBuilder: (context, index) {
-                    MarketProductDataModel farmerProduct = productList[index];
-              
-                    DateTime harvestDateNeeded = farmerProduct.date.toDate();
-                    String formattedDate = "${harvestDateNeeded.year}/${harvestDateNeeded.month}/${harvestDateNeeded.day}";
-              
+          ),
+          Expanded(
+            child: Obx(() {
+              List<MarketProductDataModel> productList =
+                  productListPageController.farmerProducts;
+              return ListView.builder(
+                itemCount: productList.length,
+                itemBuilder: (context, index) {
+                  MarketProductDataModel farmerProduct = productList[index];
 
-                    return ProductListedPageTile(
-
-                      harvestDate:formattedDate,
-                      unit: farmerProduct.unit,
-                      price: farmerProduct.price,
-                      imageUrl: farmerProduct.imageUrl,
-                      productName: farmerProduct.name,
-                      stockQuantity: farmerProduct.stockQuantity,
-                      productID: farmerProduct.productId,
-
-                    );
-                  },
-                );
-              }
-              
-              ),
-            ),
-          ],
-        ),
-
+                  DateTime harvestDateNeeded = farmerProduct.date.toDate();
+                  String formattedDate =
+                      "${harvestDateNeeded.year}/${harvestDateNeeded.month}/${harvestDateNeeded.day}";
+                  print("Product list id: ${farmerProduct.productId}");
+                  return ProductListedPageTile(
+                    harvestDate: formattedDate,
+                    unit: farmerProduct.unit,
+                    price: farmerProduct.price,
+                    imageUrl: farmerProduct.imageUrl,
+                    productName: farmerProduct.name,
+                    stockQuantity: farmerProduct.stockQuantity,
+                    productID: farmerProduct.productId,
+                  );
+                },
+              );
+            }),
+          ),
+        ],
+      ),
     );
   }
 }

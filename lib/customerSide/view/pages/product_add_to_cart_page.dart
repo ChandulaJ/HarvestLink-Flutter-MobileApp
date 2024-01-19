@@ -10,21 +10,23 @@ import 'package:harvest_delivery/farmerSide/models/customer.dart';
 import '../components/product_counter.dart';
 
 class ProductAddToCartPage extends StatefulWidget {
-  final String productId;
+  final String productId ;
   final String img;
   final double pricePerUnit;
-  final double stkQuantity;
+  final int stkQuantity;
   final String name;
   final String unit;
 
   const ProductAddToCartPage(
       {super.key,
       required this.img,
+      required this.productId,
       required this.pricePerUnit,
       required this.stkQuantity,
       required this.name,
       required this.unit,
-      required this.productId});
+     //required this.productId
+      });
 
   @override
   State<ProductAddToCartPage> createState() => _ProductAddToCartPageState();
@@ -41,7 +43,8 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
       final String customerId = AuthServices().getCurrentUser()?.uid ?? "";
       final netPrice = pricePerUnit * productQuantity;
       final marketProductsRepository = MarketProductsRepository();
-      await marketProductsRepository.decreaseStockQuantity(productId, productQuantity);
+      final int stockqty = widget.stkQuantity- productQuantity;
+      await marketProductsRepository.updateStockQuantity(productId, stockqty);
 
 
 

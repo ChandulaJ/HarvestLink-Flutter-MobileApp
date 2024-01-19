@@ -13,7 +13,7 @@ class ProductListedPageTile extends StatelessWidget {
   final double price;
   final String imageUrl;
   final String productName;
-  final double stockQuantity;
+  final int  stockQuantity;
 
   ProductListedPageTile({
     Key? key,
@@ -69,7 +69,7 @@ class ProductListedPageTile extends StatelessWidget {
                 onPressed: () {
                   Get.to(
                     () => ProductAddToCartPage(
-                      productId:productID,
+                       productId:productID,
                         img: imageUrl,
                         pricePerUnit: price,
                         stkQuantity: stockQuantity,
@@ -77,7 +77,7 @@ class ProductListedPageTile extends StatelessWidget {
                         unit: unit),
                   );
                 },
-                // onPressed: () {homePageController.cartAddBtnPressed(product_index);},
+               
                 icon: Icon(
                   Icons.add_circle,
                   size: 40,
@@ -127,7 +127,7 @@ class ProductListedPageTile extends StatelessWidget {
           ):
           Text(
 
-            '${stockQuantity.toInt()} Available',
+            '${stockQuantity} Available',
             style: GoogleFonts.roboto(
               fontWeight: FontWeight.w800,
               fontSize: 18.0,

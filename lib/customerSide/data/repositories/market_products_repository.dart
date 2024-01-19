@@ -36,7 +36,7 @@ class MarketProductsRepository {
           .get();
 
       List<MarketProductDataModel> marketItems = snapshot.docs
-          .map((doc) => MarketProductDataModel.fromMap(doc.data()))
+          .map((doc) => MarketProductDataModel.fromSnapshot(doc))
           .toList();
 
       return marketItems;
@@ -45,31 +45,60 @@ class MarketProductsRepository {
       throw e;
     }
   }
+  //
+  // Future<List<MarketProductDataModel>> fetchMarketItemsByFarmerId(String farmerId) async {
+  //   try {
+  //     QuerySnapshot<Map<String, dynamic>> snapshot = await _firestore
+  //         .collection('MarketProducts')
+  //         .where('FarmerId', isEqualTo: farmerId)
+  //         .get();
+  //
+  //     List<MarketProductDataModel> products = snapshot.docs
+  //         .map((doc) => MarketProductDataModel.fromSnapshot(doc))
+  //         .toList();
+  //
+  //     return products;
+  //   } catch (e) {
+  //     print('Error fetching products for farmer: $e');
+  //     throw e;
+  //   }
+  // }
 
-
-  Future<void> decreaseStockQuantity(String productId, int quantity) async {
+ Future<void> updateStockQuantity(String productId, int newStockQuantity) async {
     try {
-      // Get the reference to the MarketProducts document
-      final marketProductRef =
-      FirebaseFirestore.instance.collection('MarketProducts').doc(productId);
-
-      // Decrease StockQuantity by the specified quantity
-      await FirebaseFirestore.instance.runTransaction((transaction) async {
-        final marketProduct = await transaction.get(marketProductRef);
-        final currentStockQuantity = marketProduct['StockQuantity'] ?? 0;
-        final newStockQuantity = currentStockQuantity - quantity;
-
-        if (newStockQuantity < 0) {
-          throw Exception('Not enough stock available');
-        }
-
-        transaction.update(marketProductRef, {'StockQuantity': newStockQuantity});
-      });
+      await _firestore
+          .collection('MarketProducts')
+          .doc(productId)
+          .update({'StockQuantity': newStockQuantity});
     } catch (e) {
-      // Handle the error, e.g., log it or notify the user
-      print('Error decreasing stock quantity: $e');
+      print('Error updating stock quantity: $e');
       throw e;
     }
   }
+
+  // Future<void> decreaseStockQuantity(String? productId, int quantity) async {
+  //   try {
+  //     // Get the reference to the MarketProducts document
+  //     final marketProductRef =
+  //     FirebaseFirestore.instance.collection('MarketProducts').doc(productId);
+
+  //     // Decrease StockQuantity by the specified quantity
+  //     await FirebaseFirestore.instance.runTransaction((transaction) async {
+  //       final marketProduct = await transaction.get(marketProductRef);
+  //       final currentStockQuantity = marketProduct['StockQuantity'] ?? 0;
+  //       final newStockQuantity = currentStockQuantity - quantity;
+
+  //       if (newStockQuantity < 0) {
+  //         throw Exception('Not enough stock available');
+  //       }
+
+  //       transaction.update(marketProductRef, {'StockQuantity': newStockQuantity});
+  //     });
+  //   } catch (e) {
+  //     // Handle the error, e.g., log it or notify the user
+  //     print('Error decreasing stock quantity: $e');
+  //     throw e;
+  //   }
+  // }
 
 }
