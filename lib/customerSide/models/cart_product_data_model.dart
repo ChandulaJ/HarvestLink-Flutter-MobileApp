@@ -1,54 +1,54 @@
-class ProductDataModel {
+class CartProductDataModel {
   final String id;
   final String name;
   final double price;
   final String imageUrl;
   final String unit;
-  final double quantity;
+  final double cartQuantity;
   final String userId;
 
-  ProductDataModel({
+  CartProductDataModel({
     required this.id,
     required this.name,
     required this.price,
     required this.imageUrl,
     required this.unit,
-    required this.quantity,
+    required this.cartQuantity,
     required this.userId,
   });
 
-
-  ProductDataModel copyWith({
+  CartProductDataModel copyWith({
     String? id,
     String? name,
     double? price,
     String? imageUrl,
     String? unit,
-    double? quantity,
+    double? cartQuantity,
     String? userId,
   }) {
-    return ProductDataModel(
+    return CartProductDataModel(
         id: id ?? this.id,
         name: name ?? this.name,
         price: price ?? this.price,
         imageUrl: imageUrl ?? this.imageUrl,
         unit: unit ?? this.unit,
-        quantity: quantity ?? this.quantity,
+        cartQuantity: cartQuantity ?? this.cartQuantity,
         userId: userId ?? this.userId);
   }
 
-  factory ProductDataModel.fromMap(Map<String, dynamic> map) {
-    print("inside product data model");
-    return ProductDataModel(
+  factory CartProductDataModel.fromMap(Map<String, dynamic> map) {
+    print("inside cart product data model");
+    return CartProductDataModel(
       id: map['id'] ?? '',
       name: map['name'] ?? '',
       price: (map['price'] ?? 0).toDouble(),
       imageUrl: map['imageUrl'] ?? '',
       unit: map['unit'] ?? '',
-      quantity: (map['quantity'] ?? 0).toDouble(),
+      cartQuantity: (map['quantity'] ?? 0).toDouble(),
       userId: map['userId'] ?? '',
     );
   }
+
   Map<String, dynamic> toJson() {
     return {
       'id': id,
@@ -56,8 +56,9 @@ class ProductDataModel {
       'price': price,
       'imageUrl': imageUrl,
       'unit': unit,
-      'quantity': quantity,
-      'userId': userId,
+      'quantity': cartQuantity,
+      'userId':userId,
+
     };
   }
 }

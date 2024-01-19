@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:harvest_delivery/customerSide/models/cart_product_data_model.dart';
 import 'package:harvest_delivery/customerSide/view/components/checkout_tile.dart';
 import 'package:harvest_delivery/customerSide/view/pages/order_placed_page.dart';
 
 import '../../controller/cart_page_controller.dart';
-import '../../models/product_data_model.dart';
+import '../../models/market_product_data_model.dart';
 import '../components/cart_tile.dart';
 
 class CheckoutPage extends StatelessWidget {
@@ -13,8 +14,8 @@ class CheckoutPage extends StatelessWidget {
 
   double calculateTotalPrice() {
     double totalPrice = 0.0;
-    for (ProductDataModel product in cartPageController.cartItems) {
-      totalPrice += (product.price * product.quantity);
+    for (CartProductDataModel product in cartPageController.cartItems) {
+      totalPrice += (product.price * product.cartQuantity);
     }
     return totalPrice;
   }
@@ -31,7 +32,7 @@ class CheckoutPage extends StatelessWidget {
             child: ListView.builder(
               itemCount: cartPageController.cartItems.length,
               itemBuilder: (context, index) {
-                ProductDataModel product = cartPageController.cartItems[index];
+                CartProductDataModel product = cartPageController.cartItems[index];
 
                 return Padding(
                   padding: const EdgeInsets.only(top: 10.0),
@@ -39,7 +40,7 @@ class CheckoutPage extends StatelessWidget {
                     img: product.imageUrl,
                     productName: product.name,
                     price: product.price,
-                    quantity: product.quantity,
+                    quantity: product.cartQuantity,
                   ),
                 );
               },

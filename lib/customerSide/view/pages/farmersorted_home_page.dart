@@ -4,7 +4,7 @@ import 'package:harvest_delivery/customerSide/controller/farmersorted_home_page_
 import 'package:harvest_delivery/customerSide/models/farmer_data_model.dart';
 import 'package:harvest_delivery/customerSide/view/components/farmersorted_home_page_tile.dart';
 import '../../controller/home_page_controller.dart';
-import '../../models/product_data_model.dart';
+import '../../models/market_product_data_model.dart';
 import '../components/homepage_tile.dart';
 
 class FarmerSortedCustomerHomePage extends StatefulWidget {
@@ -34,6 +34,7 @@ class _FarmerSortedCustomerHomePageState
           FarmerDataModel farmer = farmerList[index];
 
           return FarmersortedHomePageTile(
+            farmerIdentifyer: farmer.id,
             name: farmer.name,
             address: farmer.address,
             email: farmer.email,
