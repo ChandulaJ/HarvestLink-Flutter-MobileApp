@@ -1,0 +1,126 @@
+{
+  "project_info": {
+    "project_number": "744982811171",
+    "project_id": "harvestlink-99581",
+    "storage_bucket": "harvestlink-99581.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744982811171:android:5f395782f227d643509796",
+        "android_client_info": {
+          "package_name": "com.example.harvest_delivery"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744982811171-far0aqdovprrq36ufhjcriiq96otdkdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAer0re1yI9y5cbq1lNxXcfYxT7kcb_SMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744982811171-far0aqdovprrq36ufhjcriiq96otdkdg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744982811171-0en2ll7nghnon7dfsn60btutb2a529h1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.harvestDelivery"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744982811171:android:5266a856b38624e8509796",
+        "android_client_info": {
+          "package_name": "com.example.harvestlinkcustomerapp"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744982811171-far0aqdovprrq36ufhjcriiq96otdkdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAer0re1yI9y5cbq1lNxXcfYxT7kcb_SMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744982811171-far0aqdovprrq36ufhjcriiq96otdkdg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744982811171-0en2ll7nghnon7dfsn60btutb2a529h1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.harvestDelivery"
+              }
+            }
+          ]
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:744982811171:android:a8913591487e892d509796",
+        "android_client_info": {
+          "package_name": "com.example.my_app"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "744982811171-tgkqgqft528n6tqfdd9k5t70d3ehhupp.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.my_app",
+            "certificate_hash": "d464691557b36287e2e385cac8535d082aecd78f"
+          }
+        },
+        {
+          "client_id": "744982811171-far0aqdovprrq36ufhjcriiq96otdkdg.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAer0re1yI9y5cbq1lNxXcfYxT7kcb_SMc"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "744982811171-far0aqdovprrq36ufhjcriiq96otdkdg.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "744982811171-0en2ll7nghnon7dfsn60btutb2a529h1.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.example.harvestDelivery"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
