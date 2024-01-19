@@ -2,8 +2,9 @@ import 'package:flutter/material.dart';
 
 class ProductCounter extends StatefulWidget {
   final Function(int) onCountChange;
+  final int stkCount;
 
-  ProductCounter({required this.onCountChange});
+  ProductCounter({required this.onCountChange, required this.stkCount});
 
   @override
   _ProductCounterState createState() => _ProductCounterState();
@@ -49,9 +50,10 @@ class _ProductCounterState extends State<ProductCounter> {
             icon: Icon(Icons.add),
             onPressed: () {
               setState(() {
-                count++;
-                widget.onCountChange(
-                    count); // Notify the parent about the count change
+                if (count < widget.stkCount) {
+                  count++;
+                  widget.onCountChange(count);
+                }
               });
             },
           ),

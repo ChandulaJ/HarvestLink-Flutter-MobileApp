@@ -94,9 +94,10 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        ProductCounter(
-                          onCountChange: updateBuyCount,
-                        ),
+                        // ProductCounter(
+                        //
+                        //   onCountChange: updateBuyCount,
+                        // ),
                       ],
                     ),
                   ),

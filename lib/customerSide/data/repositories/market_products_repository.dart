@@ -1,7 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:get/get.dart';
 import 'package:harvest_delivery/customerSide/models/market_product_data_model.dart';
 
 class MarketProductsRepository {
+  static MarketProductsRepository get instance =>Get.find();
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
   Future<List<MarketProductDataModel>> fetchMarketItems() async {
@@ -43,4 +45,31 @@ class MarketProductsRepository {
       throw e;
     }
   }
+
+
+  Future<void> decreaseStockQuantity(String productId, int quantity) async {
+    try {
+      // Get the reference to the MarketProducts document
+      final marketProductRef =
+      FirebaseFirestore.instance.collection('MarketProducts').doc(productId);
+
+      // Decrease StockQuantity by the specified quantity
+      await FirebaseFirestore.instance.runTransaction((transaction) async {
+        final marketProduct = await transaction.get(marketProductRef);
+        final currentStockQuantity = marketProduct['StockQuantity'] ?? 0;
+        final newStockQuantity = currentStockQuantity - quantity;
+
+        if (newStockQuantity < 0) {
+          throw Exception('Not enough stock available');
+        }
+
+        transaction.update(marketProductRef, {'StockQuantity': newStockQuantity});
+      });
+    } catch (e) {
+      // Handle the error, e.g., log it or notify the user
+      print('Error decreasing stock quantity: $e');
+      throw e;
+    }
+  }
+
 }
