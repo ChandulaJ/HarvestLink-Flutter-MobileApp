@@ -53,8 +53,22 @@ class _ProductListedPageState extends State<ProductListedPage> {
                       'lib/customerSide/view/images/default_product_img.jpg'),
                 ), // Replace with your dummy image asset path
               ),),
-            Text(widget.farmerName,style: GoogleFonts.roboto(fontWeight: FontWeight.w600,fontSize: 20.0),textAlign: TextAlign.left,),
+            SizedBox(height: 10.0,),
+            Align(
+              alignment: Alignment.topLeft,
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 20.0),
+                child: Text(
+                  widget.farmerName,
+                  style: GoogleFonts.alata(
+                    fontWeight: FontWeight.w500,
+                    color: Colors.green.shade900,
+                    fontSize: 30.0,
+                  ),
 
+                ),
+              ),
+            ),
             Expanded(
               child: Obx(() {
               

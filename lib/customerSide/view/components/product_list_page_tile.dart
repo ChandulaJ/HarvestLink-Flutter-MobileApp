@@ -71,14 +71,28 @@ class ProductListedPageTile extends StatelessWidget {
               fontSize: 16.0,
             ),
           ),
-          Text(
-            'Price per $unit : LKR $price', // Assuming price is a double
-            style: GoogleFonts.roboto(
-              fontWeight: FontWeight.w600,
-              fontSize: 18.0,
-              color: Colors.green, // Adjust color as needed
-            ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                'Price per $unit :', // Assuming price is a double
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w600,
+                  fontSize: 18.0,
+                  color: Colors.green.shade500, // Adjust color as needed
+                ),
 
+              ),
+              Text(
+                'LKR $price', // Assuming price is a double
+                style: GoogleFonts.roboto(
+                  fontWeight: FontWeight.w800,
+                  fontSize: 18.0,
+                  color: Colors.green.shade800, // Adjust color as needed
+                ),
+
+              ),
+            ],
           ),
           Divider(thickness: 2.0,),
           SizedBox(height: 10.0,),
