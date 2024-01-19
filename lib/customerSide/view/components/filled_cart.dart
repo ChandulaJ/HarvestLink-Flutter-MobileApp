@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:harvest_delivery/customerSide/controller/cart_page_controller.dart';
-import 'package:harvest_delivery/customerSide/models/product_data_model.dart';
+import 'package:harvest_delivery/customerSide/models/market_product_data_model.dart';
+import '../../models/cart_product_data_model.dart';
 import '../pages/checkout_page.dart';
 import 'cart_tile.dart';
 
@@ -35,7 +36,7 @@ class _FilledCartState extends State<FilledCart> {
             child: ListView.builder(
               itemCount: cartPageController.cartItems.length,
               itemBuilder: (context, index) {
-                ProductDataModel product = cartPageController.cartItems[index];
+                CartProductDataModel product = cartPageController.cartItems[index];
 
                 return Padding(
                   padding: const EdgeInsets.only(top: 10.0),
@@ -43,7 +44,7 @@ class _FilledCartState extends State<FilledCart> {
                     img: product.imageUrl,
                     productName: product.name,
                     price: product.price,
-                    quantity: product.quantity,
+                    quantity: product.cartQuantity,
                   ),
                 );
               },

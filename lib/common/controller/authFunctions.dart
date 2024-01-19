@@ -11,6 +11,10 @@ import 'firebaseFunctions.dart';
 
 
 class AuthServices {
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+  User? getCurrentUser() {
+    return _auth.currentUser;
+  }
   static signupCustomer(
 
       String email, String password, String name, BuildContext context) async {

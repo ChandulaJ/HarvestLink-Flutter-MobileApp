@@ -5,7 +5,7 @@ import 'package:harvest_delivery/customerSide/data/repositories/cart_products_re
 import 'package:harvest_delivery/customerSide/data/repositories/market_products_repository.dart';
 
 import 'cart_page_controller.dart';
-import '../models/product_data_model.dart';
+import '../models/market_product_data_model.dart';
 
 class HomePageController extends GetxController {
   final MarketProductsRepository _market_repository =
@@ -19,7 +19,7 @@ class HomePageController extends GetxController {
   static HomePageController instance =
       Get.find<HomePageController>(); // Add this line
 
-  final RxList<ProductDataModel> marketItems = <ProductDataModel>[].obs;
+  final RxList<MarketProductDataModel> marketItems = <MarketProductDataModel>[].obs;
 
   final RxInt selectedTabIndex = 0.obs;
   final RxString searchValue = ''.obs;
@@ -27,7 +27,7 @@ class HomePageController extends GetxController {
   Future<void> fetchMarketData() async {
     try {
       print("fetching market data");
-      List<ProductDataModel> fetchedItems =
+      List<MarketProductDataModel> fetchedItems =
           await _market_repository.fetchMarketItems();
       marketItems.assignAll(fetchedItems);
     } catch (e) {
@@ -36,10 +36,10 @@ class HomePageController extends GetxController {
   }
 
   void cartAddBtnPressed(int index, double qty) {
-    ProductDataModel productToAdd = marketItems[index];
+    MarketProductDataModel productToAdd = marketItems[index];
 
-    
-    cartController.addToCart(productToAdd);
+    //TODO: implement add to cart
+    //cartController.addToCart(productToAdd);
 
     showSnackBar();
   }
@@ -48,11 +48,11 @@ class HomePageController extends GetxController {
     return marketItems.map((item) => item.name).toList();
   }
 
-  ProductDataModel getMarketItemByIndex(int index) {
+  MarketProductDataModel getMarketItemByIndex(int index) {
     return marketItems[index];
   }
 
-  List<ProductDataModel> getFilteredProducts(String searchValue) {
+  List<MarketProductDataModel> getFilteredProducts(String searchValue) {
     if (searchValue.isEmpty) {
       return marketItems;
     } else {

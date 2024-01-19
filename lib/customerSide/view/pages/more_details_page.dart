@@ -7,13 +7,13 @@ import 'package:harvest_delivery/customerSide/view/pages/cart_page.dart';
 import 'package:harvest_delivery/customerSide/view/pages/main_page.dart';
 
 import '../../controller/home_page_controller.dart';
-import '../../models/product_data_model.dart';
+import '../../models/market_product_data_model.dart';
 import 'checkout_page.dart';
 
 class MoreDetailsPage extends StatefulWidget {
 
   final int itemIndex;
-  final ProductDataModel product;
+  final MarketProductDataModel product;
 
   MoreDetailsPage({Key? key, required this.itemIndex, required this.product})
       : super(key: key);
@@ -94,9 +94,10 @@ class _MoreDetailsPageState extends State<MoreDetailsPage> {
                         SizedBox(
                           height: 20.0,
                         ),
-                        ProductCounter(
-                          onCountChange: updateBuyCount,
-                        ),
+                        // ProductCounter(
+                        //
+                        //   onCountChange: updateBuyCount,
+                        // ),
                       ],
                     ),
                   ),

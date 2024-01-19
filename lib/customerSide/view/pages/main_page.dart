@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:easy_search_bar/easy_search_bar.dart';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:harvest_delivery/customerSide/view/pages/farmersorted_home_page.dart';
 
 
 import '../../controller/home_page_controller.dart';
@@ -28,7 +30,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
           if (controller.selectedTabIndex.value == 0) {
             // Show search bar only in the Home tab
             return EasySearchBar(
-              title: const Text('Harvest~Link'),
+              title:  Text('Harvest~Link',style: GoogleFonts.montserratAlternates(fontSize: 25.0,fontWeight: FontWeight.w800),),
               onSearch: (value) {
                 controller.setSearchValue(value);
               },
@@ -44,7 +46,8 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
         }),
       ),
       body: Obx(() => controller.selectedTabIndex.value == 0
-          ? CustomerHomePage()
+        //  ? CustomerHomePage()
+          ?FarmerSortedCustomerHomePage()
           : controller.selectedTabIndex.value == 1
           ? CartPage()
           : AccountPage()),
