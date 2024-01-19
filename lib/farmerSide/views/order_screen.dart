@@ -1,7 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:harvest_delivery/main.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:intl/intl.dart';
 
 import 'order_details_screen.dart';
@@ -12,10 +12,10 @@ class OrderScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return DefaultTabController(
-      length: 3,
+      length: 4,
       child: Scaffold(
         appBar: AppBar(
-          title: Text(
+          title: const Text(
             'Orders',
             style: TextStyle(
               fontSize: 28,
@@ -23,11 +23,12 @@ class OrderScreen extends StatelessWidget {
             ),
           ),
           backgroundColor: Color.fromARGB(255, 242, 242, 242),
-          bottom: TabBar(
+          bottom: const TabBar(
             tabs: [
               Tab(text: 'Pending'),
               Tab(text: 'Accepted'),
               Tab(text: 'Delivered'),
+              Tab(text: 'Cancelled'),
             ],
           ),
           automaticallyImplyLeading: false,
@@ -37,6 +38,7 @@ class OrderScreen extends StatelessWidget {
             OrderTab(status: 'Pending'),
             OrderTab(status: 'Accepted'),
             OrderTab(status: 'Delivered'),
+            OrderTab(status: 'Cancelled'),
           ],
         ),
       ),
@@ -55,10 +57,11 @@ class OrderTab extends StatelessWidget {
       color: Color.fromARGB(255, 242, 242, 242),
       padding: EdgeInsets.all(8.0),
       child: StreamBuilder<QuerySnapshot>(
-        stream: FirebaseFirestore.instance
+          stream: FirebaseFirestore.instance
             .collection('Orders')
             .where('Status', isEqualTo: status)
-            .snapshots(),
+            .where('FarmerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
+      .snapshots(),
         builder: (context, snapshot) {
           try {
             if (snapshot.hasError) {
@@ -108,48 +111,51 @@ class OrderCard extends StatefulWidget {
 
 class _OrderCardState extends State<OrderCard> {
   late String _selectedStatus;
+  late String status;
 
   @override
   void initState() {
     super.initState();
     _selectedStatus = widget.orderData['Status'] ?? 'Pending';
+    status = widget.orderData['Status'] ?? 'Pending';
   }
 
   Future<Map<String, dynamic>> getCustomerDetails(String customerId) async {
-    try {
-      DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
-          .collection('Customers')
-          .doc(customerId)
-          .get();
-      return customerSnapshot.data() as Map<String, dynamic>;
-    } catch (e) {
-      print('Error fetching customer details: $e');
-      return {};
-    }
+  try {
+    DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+        .collection('Customers')
+        .doc(customerId)
+        .get();
+    return customerSnapshot.data() as Map<String, dynamic>? ?? {};
+  } catch (e) {
+    print('Error fetching customer details: $e');
+    return {};
   }
+}
 
-  Future<Map<String, dynamic>> getProductDetails(String productId) async {
-    try {
-      DocumentSnapshot productSnapshot = await FirebaseFirestore.instance
-          .collection('MarketProducts')
-          .doc(productId)
-          .get();
-      return productSnapshot.data() as Map<String, dynamic>;
-    } catch (e) {
-      print('Error fetching product details: $e');
-      return {};
-    }
+Future<Map<String, dynamic>> getProductDetails(String productId) async {
+  try {
+    DocumentSnapshot productSnapshot = await FirebaseFirestore.instance
+        .collection('MarketProducts')
+        .doc(productId)
+        .get();
+    return productSnapshot.data() as Map<String, dynamic>? ?? {};
+  } catch (e) {
+    print('Error fetching product details: $e');
+    return {};
   }
+}
+
 
   Widget _buildDropdownMenu() {
     return DropdownButton<String>(
-      value: _selectedStatus,
+      value: status,
       icon: Icon(Icons.arrow_drop_down, color: MyApp.primaryColor),
       iconSize: 24,
       elevation: 16,
       style: TextStyle(color: MyApp.primaryColor, fontSize: 16),
       underline: Container(
-        height: 2,
+        height: 2,  
         color: MyApp.primaryColor,
       ),
       onChanged: (String? newValue) {
@@ -158,7 +164,7 @@ class _OrderCardState extends State<OrderCard> {
         });
         _updateOrderStatus();
       },
-      items: <String>['Pending', 'Accepted', 'Delivered']
+      items: <String>['Pending', 'Accepted', 'Delivered', 'Cancelled']
           .map<DropdownMenuItem<String>>((String value) {
         return DropdownMenuItem<String>(
           value: value,
@@ -190,11 +196,17 @@ class _OrderCardState extends State<OrderCard> {
           builder: (context, snapshot) {
             String customerName = snapshot.data?['Name'] ?? 'N/A';
 
-            // Format the timestamp
-            DateTime orderDateTime =
+            DateTime? orderDateTime =
                 (widget.orderData['DateTime'] as Timestamp).toDate();
-            String formattedDateTime =
-                DateFormat('yyyy-MM-dd HH:mm:ss').format(orderDateTime);
+
+          String formattedDateTime = '';
+
+          if (orderDateTime != null) {
+            formattedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(orderDateTime);
+          } else {
+            formattedDateTime = 'N/A';
+          }
+
 
             return Card(
               elevation: 4,
@@ -290,7 +302,6 @@ class _OrderCardState extends State<OrderCard> {
                           child: Text(
                             'View Details',
                             style: TextStyle(
-                              color: MyApp.primaryColor,
                               fontSize: 16,
                             ),
                           ),

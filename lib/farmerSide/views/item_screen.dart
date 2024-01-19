@@ -1,11 +1,10 @@
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:harvest_delivery/main.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
+import 'package:harvest_delivery/main.dart';
 import 'add_item.dart';
 import 'update_item.dart';
-
 
 class ItemScreen extends StatefulWidget {
   const ItemScreen({Key? key}) : super(key: key);
@@ -15,47 +14,77 @@ class ItemScreen extends StatefulWidget {
 }
 
 class _ItemScreenState extends State<ItemScreen> {
-    final Stream<QuerySnapshot> itemsStream = FirebaseFirestore.instance
+  final Stream<QuerySnapshot> itemsStream = FirebaseFirestore.instance
       .collection('MarketProducts')
       .where('FarmerId', isEqualTo: FirebaseAuth.instance.currentUser!.uid)
       .snapshots();
 
-Future<void> deleteItem(String id) async {
-  try {
-    bool confirmDelete = await showDialog(
-      context: context,
-      builder: (BuildContext context) {
-        return AlertDialog(
-          title: Text('Confirm Deletion'),
-          content: Text('Are you sure you want to delete this item?'),
-          actions: [
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(false),
-              child: Text('Cancel'),
+  Future<void> deleteItem(String id) async {
+    try {
+      bool confirmDelete = await showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10.0),
             ),
-            TextButton(
-              onPressed: () => Navigator.of(context).pop(true),
-              child: Text('Delete'),
+            title: Text(
+              'Delete Confirmation',
+              style: TextStyle(
+                fontSize: 18.0,
+                fontWeight: FontWeight.bold,
+              ),
             ),
-          ],
-        );
-      },
-    );
+            content: Text(
+              'Are you sure you want to delete this item?',
+              style: TextStyle(fontSize: 16.0),
+            ),
+            actions: [
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(false),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.grey, // Change button color here
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Text(
+                  'Cancel',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+              SizedBox(width: 8.0),
+              ElevatedButton(
+                onPressed: () => Navigator.of(context).pop(true),
+                style: ElevatedButton.styleFrom(
+                  primary: Colors.red, // Change button color here
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                ),
+                child: Text(
+                  'Delete',
+                  style: TextStyle(color: Colors.white),
+                ),
+              ),
+            ],
+          );
+        },
+      );
 
-    if (confirmDelete == true) {
-      await FirebaseFirestore.instance
-          .collection('MarketProducts')
-          .doc(id)
-          .delete();
+      if (confirmDelete == true) {
+        await FirebaseFirestore.instance
+            .collection('MarketProducts')
+            .doc(id)
+            .delete();
+      }
+    } catch (error) {
+      print('Failed to delete item: $error');
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(content: Text('Failed to delete item')),
+      );
     }
-  } catch (error) {
-    print('Failed to delete item: $error');
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(content: Text('Failed to delete item')),
-    );
   }
-}
-
 
   Future<String> getImageURL(String imagePath) async {
     final imageRef = FirebaseStorage.instance.ref().child(imagePath);
@@ -69,14 +98,15 @@ Future<void> deleteItem(String id) async {
         title: const Text(
           'Items',
           style: TextStyle(
-            fontSize: 28, 
+            fontSize: 28,
             fontWeight: FontWeight.bold,
           ),
         ),
         automaticallyImplyLeading: false,
+        backgroundColor: const Color.fromARGB(255, 240, 240, 240), // Light grey
       ),
       body: Container(
-        padding: const EdgeInsets.all(8.0),
+        color: const Color.fromARGB(255, 240, 240, 240), // Light grey
         child: StreamBuilder<QuerySnapshot>(
           stream: itemsStream,
           builder: (context, snapshot) {
@@ -101,54 +131,66 @@ Future<void> deleteItem(String id) async {
                 itemBuilder: (context, index) {
                   final itemData = storedocs[index];
 
-                  return Column(
-                    children: [
-                      ListTile(
-                        contentPadding:
-                            EdgeInsets.symmetric(vertical: 15, horizontal: 10),
-                        leading: FutureBuilder<String>(
-                          future: itemData['ImageUrl'] != null
-                              ? getImageURL(itemData['ImageUrl'])
-                              : null,
-                          builder: (context, snapshot) {
-                            if (snapshot.connectionState ==
-                                ConnectionState.waiting) {
-                              return CircularProgressIndicator();
-                            }
+                  return Card(
+                    surfaceTintColor: Colors.white,
+                    elevation: 4,
+                    margin: EdgeInsets.symmetric(vertical: 8, horizontal: 16),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(16.0),
+                    ),
+                    child: ListTile(
+                      contentPadding:
+                          EdgeInsets.symmetric(vertical: 15, horizontal: 10),
+                      leading: FutureBuilder<String>(
+                        future: itemData['ImageUrl'] != null
+                            ? getImageURL(itemData['ImageUrl'])
+                            : null,
+                        builder: (context, snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return CircularProgressIndicator();
+                          }
 
-                            return CircleAvatar(
-                              radius: 25,
-                              backgroundImage: NetworkImage(itemData['ImageUrl'] ?? ''),
-                            );
-                          },
-                        ),
-                        title: Text(
-                          itemData['Name'] ?? '',
-                          style: TextStyle(fontSize: 18, color: Colors.black),
-                        ),
-                        trailing: Row(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            IconButton(
-                              icon: Icon(Icons.edit),
-                              onPressed: () => Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      UpdateItem(id: itemData['id']),
-                                ),
-                              ),
-                            ),
-                            IconButton(
-                              icon: Icon(Icons.delete),
-                              color: const Color.fromARGB(255, 157, 27, 18),
-                              onPressed: () => deleteItem(itemData['id']),
-                            ),
-                          ],
-                        ),
+                          return CircleAvatar(
+                            radius: 35,
+                            backgroundImage:
+                                NetworkImage(itemData['ImageUrl'] ?? ''),
+                          );
+                        },
                       ),
-                      Divider(height: 0),
-                    ],
+                      title: Text(
+                        itemData['Name'] ?? '',
+                        style: TextStyle(fontSize: 18, color: Colors.black),
+                      ),
+                     trailing: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        ElevatedButton(
+                          onPressed: () => Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => UpdateItem(id: itemData['id']),
+                            ),
+                          ),
+                          child: Icon(Icons.edit_outlined, color: Colors.white),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: MyApp.secondaryColor, // Use your app's primary color here
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(10),
+                          ),
+                        ),
+                        ElevatedButton(
+                          onPressed: () => deleteItem(itemData['id']),
+                          child: Icon(Icons.delete_outline, color: Colors.white),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: const Color.fromARGB(255, 157, 27, 18),
+                            shape: CircleBorder(),
+                            padding: EdgeInsets.all(10),
+                          ),
+                        ),
+                      ],
+                    ),
+                    ),
                   );
                 },
               );
@@ -173,4 +215,5 @@ Future<void> deleteItem(String id) async {
       floatingActionButtonLocation: FloatingActionButtonLocation.endFloat,
     );
   }
+
 }

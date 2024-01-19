@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:harvest_delivery/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart';
@@ -166,7 +167,7 @@ class _UpdateItemState extends State<UpdateItem> {
                 price: data['Price'],
                 quantity: data['StockQuantity'],
                 unit: data['Unit'],
-                harvestedDate: harvestedDate ?? DateTime.now(),
+                harvestedDate: harvestedDate,
                 image: '',
                 farmerId: FirebaseAuth.instance.currentUser!.uid,
               );
@@ -203,6 +204,12 @@ class _UpdateItemState extends State<UpdateItem> {
                         errorStyle:
                             TextStyle(color: Colors.redAccent, fontSize: 15),
                       ),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter Name';
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: 12),
                     TextFormField(
@@ -221,6 +228,12 @@ class _UpdateItemState extends State<UpdateItem> {
                         errorStyle:
                             TextStyle(color: Colors.redAccent, fontSize: 15),
                       ),
+                       validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter Unit';
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: 12),
                     TextFormField(
@@ -234,12 +247,23 @@ class _UpdateItemState extends State<UpdateItem> {
                           TextEditingController(text: harvest.price.toString()),
                       onChanged: (value) => harvest.price = double.parse(value),
                       decoration: InputDecoration(
-                        labelText: 'Unit Price',
+                        labelText: 'Unit Price (Rs.)',
                         labelStyle: TextStyle(fontSize: 18.0),
                         border: OutlineInputBorder(),
                         errorStyle:
                             TextStyle(color: Colors.redAccent, fontSize: 15),
                       ),
+                      keyboardType: TextInputType.numberWithOptions(decimal: true),
+                      validator: (value) {
+                        if (value == null || value.isEmpty) {
+                          return 'Please Enter Unit Price';
+                        }
+                        // Use a regular expression to check if the input is a valid non-negative number
+                        if (!RegExp(r'^\d*\.?\d+$').hasMatch(value)) {
+                          return 'Please Enter a Valid Number';
+                        }
+                        return null;
+                      },
                     ),
                     SizedBox(height: 12),
                     TextFormField(
@@ -259,6 +283,21 @@ class _UpdateItemState extends State<UpdateItem> {
                         errorStyle:
                             TextStyle(color: Colors.redAccent, fontSize: 15),
                       ),
+                      keyboardType: TextInputType.number,
+                      inputFormatters: [FilteringTextInputFormatter.digitsOnly],
+                        validator: (value) {
+                          if (value == null || value.isEmpty) {
+                            return 'Please Enter Quantity';
+                          }
+
+                          int? qty = int.tryParse(value);
+
+                          if (qty == null) {
+                            return 'Please Enter a Valid Integer';
+                          }
+
+                          return null;
+                        },
                     ),
                     SizedBox(height: 12),
                     TextFormField(
@@ -269,7 +308,7 @@ class _UpdateItemState extends State<UpdateItem> {
                           context: context,
                           initialDate: harvestedDate,
                           firstDate: DateTime(2000),
-                          lastDate: DateTime(2101),
+                          lastDate: DateTime.now(),
                         );
                         if (pickedDate != null && pickedDate != harvestedDate) {
                           harvestedDate = pickedDate;
@@ -281,10 +320,26 @@ class _UpdateItemState extends State<UpdateItem> {
                         labelText: 'Harvested Date',
                         labelStyle: TextStyle(fontSize: 18.0),
                         border: OutlineInputBorder(),
-                        errorStyle:
-                            TextStyle(color: Colors.redAccent, fontSize: 15),
+                        prefixIcon: IconButton(
+                          onPressed: () async {
+                            DateTime? pickedDate = await showDatePicker(
+                              context: context,
+                              initialDate: harvestedDate,
+                              firstDate: DateTime(2000),
+                              lastDate: DateTime.now(),
+                            );
+                            if (pickedDate != null && pickedDate != harvestedDate) {
+                              harvestedDate = pickedDate;
+                              pickedDateTextController.text =
+                                  DateFormat('yyyy-MM-dd').format(pickedDate);
+                            }
+                          },
+                          icon: Icon(Icons.calendar_today),
+                        ),
+                        errorStyle: TextStyle(color: Colors.redAccent, fontSize: 15),
                       ),
                     ),
+
                     SizedBox(height: 20),
                     ElevatedButton(
                       key: globalKey,
@@ -297,7 +352,7 @@ class _UpdateItemState extends State<UpdateItem> {
                       child: Text('Update', style: TextStyle(fontSize: 18.0)),
                       style: ElevatedButton.styleFrom(
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         minimumSize: Size(double.infinity, 50),
                         backgroundColor: MyApp.primaryColor,

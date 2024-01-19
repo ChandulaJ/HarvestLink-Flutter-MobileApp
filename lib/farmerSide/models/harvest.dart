@@ -6,7 +6,7 @@ class Harvest {
   double price;
   int quantity;
   String unit;
-  DateTime harvestedDate;
+  DateTime ?harvestedDate;
   String image;
   String farmerId;
 

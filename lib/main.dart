@@ -24,8 +24,9 @@ Future main() async {
 }
 
 class MyApp extends StatelessWidget {
-  static const Color primaryColor = Colors.blue;
-
+  static const Color primaryColor = Color.fromARGB(255, 75, 183, 136);
+  static const Color secondaryColor = Color.fromARGB(255, 240, 179, 36);
+  static const Color ternaryColor = Color.fromARGB(255, 41, 105, 77);
   const MyApp({Key? key}) : super(key: key);
 
   // This widget is the root of your application.

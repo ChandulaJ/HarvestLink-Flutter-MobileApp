@@ -2,6 +2,7 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:harvest_delivery/main.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:intl/intl.dart'; // Added for date formatting
@@ -54,29 +55,27 @@ class _AddItemState extends State<AddItem> {
     String imageUrl = '';
 
     if (_image.path.isNotEmpty && isValidImage(_image)) {
-    String imageName = DateTime.now().toString() + '.jpg';
+      String imageName = DateTime.now().toString() + '.jpg';
 
-    Reference storageReference =
-        FirebaseStorage.instance.ref().child('item_images').child(imageName);
-    UploadTask uploadTask = storageReference.putFile(_image);
-    
-    await uploadTask.whenComplete(() async {
-      imageUrl = await storageReference.getDownloadURL();
+      Reference storageReference =
+          FirebaseStorage.instance.ref().child('item_images').child(imageName);
+      UploadTask uploadTask = storageReference.putFile(_image);
+
+      await uploadTask.whenComplete(() async {
+        imageUrl = await storageReference.getDownloadURL();
       });
     }
- 
+
     Harvest harvest = Harvest(
       produceId: "",
       name: nameController.text,
       price: double.parse(priceController.text),
       quantity: int.parse(quantityController.text),
       unit: unitController.text,
-      harvestedDate: harvestedDate ??
-      DateTime.now(), 
+      harvestedDate: harvestedDate,
       image: imageUrl,
-      farmerId: FirebaseAuth.instance.currentUser!.uid, 
+      farmerId: FirebaseAuth.instance.currentUser!.uid,
     );
-    
 
     await FirebaseFirestore.instance
         .collection('MarketProducts')
@@ -87,7 +86,7 @@ class _AddItemState extends State<AddItem> {
           'Unit': harvest.unit,
           'HarvestedDate': harvest.harvestedDate,
           'ImageUrl': harvest.image,
-          'FarmerId': harvest.farmerId, 
+          'FarmerId': harvest.farmerId,
         })
         .then((value) => print('Item Added'))
         .catchError((error) => print('Failed to Add item: $error'));
@@ -110,11 +109,11 @@ class _AddItemState extends State<AddItem> {
     return Scaffold(
       // resizeToAvoidBottomInset : false,
       appBar: AppBar(
-        title: Text("Add New Item", style: TextStyle(
-            fontWeight: FontWeight.bold,
-          )),
-        
-        backgroundColor: MyApp.primaryColor ,
+        title: Text("Add New Item",
+            style: TextStyle(
+              fontWeight: FontWeight.bold,
+            )),
+        backgroundColor: MyApp.primaryColor,
       ),
       body: SingleChildScrollView(
         child: Padding(
@@ -156,7 +155,6 @@ class _AddItemState extends State<AddItem> {
                             ],
                           ),
                         ),
-
                 ),
                 SizedBox(height: 12.0),
                 TextFormField(
@@ -187,7 +185,6 @@ class _AddItemState extends State<AddItem> {
                     border: OutlineInputBorder(),
                   ),
                   controller: unitController,
-                  keyboardType: TextInputType.number,
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please Enter Unit';
@@ -208,6 +205,10 @@ class _AddItemState extends State<AddItem> {
                     if (value == null || value.isEmpty) {
                       return 'Please Enter Unit Price';
                     }
+                    // Use a regular expression to check if the input is a valid non-negative number
+                    if (!RegExp(r'^\d*\.?\d+$').hasMatch(value)) {
+                      return 'Please Enter a Valid Number';
+                    }
                     return null;
                   },
                 ),
@@ -220,15 +221,22 @@ class _AddItemState extends State<AddItem> {
                   ),
                   controller: quantityController,
                   keyboardType: TextInputType.number,
+                  inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                   validator: (value) {
                     if (value == null || value.isEmpty) {
                       return 'Please Enter Quantity';
                     }
+
+                    int? qty = int.tryParse(value);
+
+                    if (qty == null) {
+                      return 'Please Enter a Valid Integer';
+                    }
+
                     return null;
                   },
                 ),
                 SizedBox(height: 12.0),
-                
                 TextFormField(
                   readOnly: true,
                   controller: pickedDateTextController,
@@ -237,7 +245,7 @@ class _AddItemState extends State<AddItem> {
                       context: context,
                       initialDate: harvestedDate,
                       firstDate: DateTime(2000),
-                      lastDate: DateTime(2101),
+                      lastDate: DateTime.now(),  // Set the last date to today
                     );
                     if (pickedDate != null && pickedDate != harvestedDate) {
                       harvestedDate = pickedDate;
@@ -249,13 +257,28 @@ class _AddItemState extends State<AddItem> {
                     labelText: 'Harvested Date',
                     labelStyle: TextStyle(fontSize: 18.0),
                     border: OutlineInputBorder(),
+                    prefixIcon: IconButton(
+                      onPressed: () async {
+                        DateTime? pickedDate = await showDatePicker(
+                          context: context,
+                          initialDate: harvestedDate,
+                          firstDate: DateTime(2000),
+                          lastDate: DateTime.now(),  
+                        );
+                        if (pickedDate != null && pickedDate != harvestedDate) {
+                          harvestedDate = pickedDate;
+                          pickedDateTextController.text =
+                              DateFormat('yyyy-MM-dd').format(pickedDate);
+                        }
+                      },
+                      icon: Icon(Icons.calendar_today),
+                    ),
                   ),
                 ),
                 SizedBox(height: 20.0),
                 Column(
                   children: [
                     ElevatedButton(
-                      //key: globalKey,
                       onPressed: () {
                         if (_formKey.currentState!.validate()) {
                           addItem();
@@ -269,14 +292,13 @@ class _AddItemState extends State<AddItem> {
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         backgroundColor: MyApp.primaryColor,
                         foregroundColor: Colors.white,
                       ),
                     ),
-                    SizedBox(
-                        height: 12.0),
+                    SizedBox(height: 12.0),
                     ElevatedButton(
                       key: globalKey,
                       onPressed: clearText,
@@ -287,7 +309,7 @@ class _AddItemState extends State<AddItem> {
                       style: ElevatedButton.styleFrom(
                         minimumSize: Size(double.infinity, 50),
                         shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(0.0),
+                          borderRadius: BorderRadius.circular(10.0),
                         ),
                         backgroundColor: MyApp.primaryColor,
                         foregroundColor: Colors.white,

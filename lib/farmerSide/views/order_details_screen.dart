@@ -16,18 +16,18 @@ class OrderDetailsScreen extends StatelessWidget {
         Row(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Icon(icon, size: 24),
+            Icon(icon, size: 24, color: MyApp.primaryColor),
             SizedBox(width: 12),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold),
+                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
                 ),
                 Text(
                   value,
-                  style: TextStyle(fontSize: 18),
+                  style: TextStyle(fontSize: 18, color: Colors.black),
                 ),
               ],
             ),
@@ -46,6 +46,7 @@ class OrderDetailsScreen extends StatelessWidget {
           style: TextStyle(
             fontWeight: FontWeight.bold,
             fontSize: 20,
+            color: Colors.white,
           ),
         ),
         backgroundColor: MyApp.primaryColor,
@@ -55,7 +56,7 @@ class OrderDetailsScreen extends StatelessWidget {
         builder: (context, snapshot) {
           try {
             if (snapshot.hasError) {
-              return Center(child: Text('Something went wrong'));
+              return Center(child: Text('Something went wrong', style: TextStyle(color: Colors.red)));
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -115,110 +116,114 @@ class OrderDetailsScreen extends StatelessWidget {
                         );
                       },
                     ),
-                    Divider(),
-
+                    Divider(color: Colors.grey),
                     _buildDetailRow(Icons.date_range, 'Order Date and Time:', formattedDateTime),
                     _buildDetailRow(Icons.category, 'Order Status:', orderData['Status'] ?? 'N/A'),
-                    Divider(),
+                    Divider(color: Colors.grey),
                     SizedBox(height: 4),
                     SingleChildScrollView(
-                    scrollDirection: Axis.horizontal,
-                    child: DataTable(
-                      columnSpacing: 16, // Adjust the spacing between columns as needed
-                      columns: [
-                        DataColumn(label: Text('Product', style: TextStyle(fontSize: 15))),
-                        DataColumn(label: Text('Qty', style: TextStyle(fontSize: 15))),
-                        DataColumn(label: Text('Unit Price (Rs.)', style: TextStyle(fontSize: 15))),
-                        DataColumn(label: Text('Amount (Rs.)', style: TextStyle(fontSize: 15))),
-                      ],
-                      rows: items.map<DataRow>((item) {
-                        String productId = item['ProductId'] as String;
+                      scrollDirection: Axis.horizontal,
+                      child: DataTable(
+                        columnSpacing: 16,
+                        columns: [
+                          DataColumn(
+                              label: Text('Product', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                          DataColumn(
+                              label: Text('Qty', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                          DataColumn(
+                              label: Text('Unit Price (Rs.)', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                          DataColumn(
+                              label: Text('Amount (Rs.)', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                        ],
+                        rows: items.map<DataRow>((item) {
+                          String productId = item['ProductId'] as String;
 
-                        Future<Map<String, dynamic>> getProductDetails() async {
-                          try {
-                            DocumentSnapshot productSnapshot = await FirebaseFirestore.instance
-                                .collection('MarketProducts')
-                                .doc(productId)
-                                .get();
-                            return productSnapshot.data() as Map<String, dynamic>;
-                          } catch (e) {
-                            print('Error fetching product details: $e');
-                            return {};
+                          Future<Map<String, dynamic>> getProductDetails() async {
+                            try {
+                              DocumentSnapshot productSnapshot = await FirebaseFirestore.instance
+                                  .collection('MarketProducts')
+                                  .doc(productId)
+                                  .get();
+                              return productSnapshot.data() as Map<String, dynamic>;
+                            } catch (e) {
+                              print('Error fetching product details: $e');
+                              return {};
+                            }
                           }
-                        }
 
-                        return DataRow(
-                          cells: [
-                            DataCell(
-                              Align(
-                                alignment: Alignment.centerLeft,
-                                child: FutureBuilder<Map<String, dynamic>>(
-                                  future: getProductDetails(),
-                                  builder: (context, productSnapshot) {
-                                    String productName = productSnapshot.data?['Name'] ?? 'N/A';
-                                    String unit = productSnapshot.data?['Unit'] ?? 'N/A';
+                          return DataRow(
+                            cells: [
+                              DataCell(
+                                Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: FutureBuilder<Map<String, dynamic>>(
+                                    future: getProductDetails(),
+                                    builder: (context, productSnapshot) {
+                                      String productName = productSnapshot.data?['Name'] ?? 'N/A';
+                                      String unit = productSnapshot.data?['Unit'] ?? 'N/A';
 
-                                    return Column(
-                                      crossAxisAlignment: CrossAxisAlignment.start,
-                                      children: [
-                                        Text(
-                                          productName,
-                                          style: TextStyle(fontSize: 15),
-                                        ),
-                                        Text(
-                                          '($unit)',
-                                          style: TextStyle(fontSize: 14, color: Colors.grey),
-                                        ),
-                                      ],
-                                    );
-                                  },
+                                      return Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            productName,
+                                            style: TextStyle(fontSize: 15, color: Colors.black),
+                                          ),
+                                          Text(
+                                            '($unit)',
+                                            style: TextStyle(fontSize: 14, color: const Color.fromARGB(255, 136, 136, 136)),
+                                          ),
+                                        ],
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            DataCell(
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  '${item['Quantity']}',
-                                  style: TextStyle(fontSize: 15),
+                              DataCell(
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '${item['Quantity']}',
+                                    style: TextStyle(fontSize: 15, color: Colors.black),
+                                  ),
                                 ),
                               ),
-                            ),
-                            DataCell(
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: FutureBuilder<Map<String, dynamic>>(
-                                  future: getProductDetails(),
-                                  builder: (context, productSnapshot) {
-                                    double unitPrice = productSnapshot.data?['Price'] ?? 0.0;
+                              DataCell(
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: FutureBuilder<Map<String, dynamic>>(
+                                    future: getProductDetails(),
+                                    builder: (context, productSnapshot) {
+                                      double unitPrice = item['UnitPrice'] ?? 0.0;
 
-                                    return Text(
-                                      '${unitPrice.toStringAsFixed(2)}',
-                                      style: TextStyle(fontSize: 15),
-                                    );
-                                  },
+                                      return Text(
+                                        '${unitPrice.toStringAsFixed(2)}',
+                                        style: TextStyle(fontSize: 15, color: Colors.black),
+                                      );
+                                    },
+                                  ),
                                 ),
                               ),
-                            ),
-                            DataCell(
-                              Align(
-                                alignment: Alignment.centerRight,
-                                child: Text(
-                                  '${((item['Quantity'] as int) * (item['UnitPrice'] as double)).toStringAsFixed(2)}',
-                                  style: TextStyle(fontSize: 15),
+                              DataCell(
+                                Align(
+                                  alignment: Alignment.centerRight,
+                                  child: Text(
+                                    '${((item['Quantity'] as int) * (item['UnitPrice'] as double)).toStringAsFixed(2)}',
+                                    style: TextStyle(fontSize: 15, color: Colors.black),
+                                  ),
                                 ),
                               ),
-                            ),
-                          ],
-                        );
-                      }).toList(),
+                            ],
+                          );
+                        }).toList(),
+                      ),
                     ),
-                  ),
-
                     SizedBox(height: 20),
-                    Text(
-                      'Total Amount: \Rs. ${calculateTotalAmount().toStringAsFixed(2)}',
-                      style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
+                    Center(
+                      child: Text(
+                        'Total Amount: \Rs. ${calculateTotalAmount().toStringAsFixed(2)}',
+                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: MyApp.ternaryColor),
+                      ),
                     ),
                     SizedBox(height: 20),
                   ],
@@ -227,7 +232,7 @@ class OrderDetailsScreen extends StatelessWidget {
             );
           } catch (e) {
             print('Error in FutureBuilder: $e');
-            return Center(child: Text('Something went wrong'));
+            return Center(child: Text('Something went wrong', style: TextStyle(color: Colors.red)));
           }
         },
       ),
