@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class MarketProductDataModel {
+  final String productId;
   final String farmerId;
   final String name;
   final double price;
@@ -10,6 +11,7 @@ class MarketProductDataModel {
   final Timestamp date;
 
   MarketProductDataModel({
+    required this.productId,
     required this.farmerId,
     required this.name,
     required this.price,
@@ -20,6 +22,7 @@ class MarketProductDataModel {
   });
 
   MarketProductDataModel copyWith({
+    String? productId,
     String? farmerId,
     String? name,
     double? price,
@@ -29,6 +32,7 @@ class MarketProductDataModel {
     Timestamp? date,
   }) {
     return MarketProductDataModel(
+        productId: productId ?? this.productId,
         farmerId: farmerId ?? this.farmerId,
         name: name ?? this.name,
         price: price ?? this.price,
@@ -41,6 +45,7 @@ class MarketProductDataModel {
   factory MarketProductDataModel.fromMap(Map<String, dynamic> map) {
     print("inside market product data model");
     return MarketProductDataModel(
+      productId: map['id'] ?? '',
       farmerId: map['FarmerId'] ?? '',
       name: map['Name'] ?? '',
       price: (map['Price'] ?? 0).toDouble(),
@@ -53,6 +58,7 @@ class MarketProductDataModel {
 
   Map<String, dynamic> toJson() {
     return {
+      
       'id': farmerId,
       'name': name,
       'price': price,

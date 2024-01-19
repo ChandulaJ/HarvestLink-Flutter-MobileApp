@@ -82,7 +82,7 @@ class _ProductListedPageState extends State<ProductListedPage> {
                     DateTime harvestDateNeeded = farmerProduct.date.toDate();
                     String formattedDate = "${harvestDateNeeded.year}/${harvestDateNeeded.month}/${harvestDateNeeded.day}";
               
-              
+
                     return ProductListedPageTile(
 
                       harvestDate:formattedDate,
@@ -91,7 +91,7 @@ class _ProductListedPageState extends State<ProductListedPage> {
                       imageUrl: farmerProduct.imageUrl,
                       productName: farmerProduct.name,
                       stockQuantity: farmerProduct.stockQuantity,
-                      productID: '',
+                      productID: farmerProduct.productId,
 
                     );
                   },
