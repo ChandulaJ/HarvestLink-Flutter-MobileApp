@@ -17,6 +17,7 @@ class ProductDataModel {
     required this.userId,
   });
 
+
   ProductDataModel copyWith({
     String? id,
     String? name,
