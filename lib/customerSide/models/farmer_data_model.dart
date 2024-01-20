@@ -6,13 +6,15 @@ class FarmerDataModel {
   final String address;
   final String email;
   final String phoneNumber;
+  final String imgUrl;
 
   FarmerDataModel(
       {required this.id,
       required this.name,
       required this.address,
       required this.email,
-      required this.phoneNumber});
+      required this.phoneNumber,
+      required this.imgUrl});
 
   factory FarmerDataModel.fromSnapshot(
       DocumentSnapshot<Map<String, dynamic>> document) {
@@ -24,6 +26,7 @@ class FarmerDataModel {
 
     return FarmerDataModel(
       id: document.id,
+      imgUrl: data['ImageUrl'],
       name: data['Name'],
       address: data['Address'],
       email: data['Email'],
@@ -33,6 +36,6 @@ class FarmerDataModel {
 
   static FarmerDataModel empty() {
     return FarmerDataModel(
-        id: '', name: '', address: '', email: '', phoneNumber: '');
+        id: '', name: '', address: '', email: '', phoneNumber: '',imgUrl: '');
   }
 }
