@@ -106,22 +106,9 @@ class _SignInPageState extends State<SignInPage> {
                       ],
                     ),
                   ),
-                  const SizedBox(height: 16),
-                  Row(
-                    children: [
-                      Spacer(),
-                      GestureDetector(
-                        onTap: () {
-                          // TODO: Implement forgot password page
-                          print("Forgot Password");
-                        },
-                        child: const Text(
-                          'Forgot Password?',
-                        ),
-                      ),
-                    ],
-                  ),
-                  const SizedBox(height: 16),
+
+
+                  const SizedBox(height: 30.0),
                   Container(
                     width: MediaQuery.of(context).size.width,
                     child: ElevatedButton(

@@ -46,8 +46,22 @@ class _CartPageControllerState extends State<CartPageController> {
             )
           : cartItems.isEmpty
               ? Center(
-                  child: Text('Cart is empty.'),
-                )
+                child: Column(
+                        children: [
+                          Text(
+                            "Your Cart",
+                            style: TextStyle(
+                fontWeight: FontWeight.bold,
+                fontSize: 25.0,
+                            ),
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(height: 20.0,),
+                          Image.asset("lib/customerSide/view/images/empty-cart.png",height: 160.0,width: 160.0,),
+                          Text("Looks like your cart is empty 😕")
+                        ],
+                      ),
+              )
               : ListView.builder(
                   itemCount: cartItems.length,
                   itemBuilder: (context, index) {

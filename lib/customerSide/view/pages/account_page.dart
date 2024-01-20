@@ -1,5 +1,8 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:google_fonts/google_fonts.dart';
+import 'package:harvest_delivery/common/views/pages/signin_page.dart';
+import 'package:harvest_delivery/customerSide/controller/home_page_controller.dart';
 
 import '../components/account_page_tile.dart';
 
@@ -8,6 +11,7 @@ class AccountPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    HomePageController homePageController = Get.find();
     return Container(
       padding: const EdgeInsets.only(top: 20.0),
       child: Column(
@@ -57,7 +61,10 @@ class AccountPage extends StatelessWidget {
             endIndent: 10.0,
           ),
           ElevatedButton(
-            onPressed: () {},
+            onPressed: () {
+            homePageController.selectedTabIndex.value = 0;
+              Get.to(()=>SignInPage());
+            },
             style: ElevatedButton.styleFrom(
               elevation: 0.0,
               backgroundColor: Colors.white,

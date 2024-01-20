@@ -29,7 +29,7 @@ class MyApp extends StatelessWidget {
   static const Color ternaryColor = Color.fromARGB(255, 41, 105, 77);
   const MyApp({Key? key}) : super(key: key);
 
-  // This widget is the root of your application.
+
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
@@ -47,12 +47,9 @@ class MyApp extends StatelessWidget {
         '/signin': (context) => SignInPage(),
       },
 
-      //home: const MainPage(title: 'Harvest Link'),
-      home: SignInPage(),
-      //home:OrderPlacedPage(),
-//home: CustomerMainPage(),
 
-      // home:FarmerMainPage(),
+      home: SignInPage(),
+
     );
   }
 }
