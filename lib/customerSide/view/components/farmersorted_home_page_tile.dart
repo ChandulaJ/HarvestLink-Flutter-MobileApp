@@ -15,6 +15,7 @@ class FarmersortedHomePageTile extends StatelessWidget {
   final String address;
   final String phoneNumber;
   final String farmerIdentifyer;
+  final String farmerImg;
 
   FarmersortedHomePageTile({
     Key? key,
@@ -23,11 +24,14 @@ class FarmersortedHomePageTile extends StatelessWidget {
     required this.address,
     required this.phoneNumber,
     required this.farmerIdentifyer,
+    required this.farmerImg,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final imageString = "https://firebasestorage.googleapis.com/v0/b/harvestlink-99581.appspot.com/o/farmer_picture.jpg?alt=media&token=f7172814-1353-45ac-a6b9-30f1c1ef377c";
+    final imageString = farmerImg.isEmpty
+        ? "https://firebasestorage.googleapis.com/v0/b/harvestlink-99581.appspot.com/o/farmer_picture.jpg?alt=media&token=f7172814-1353-45ac-a6b9-30f1c1ef377c"
+        : farmerImg;
 
     return Container(
       margin: EdgeInsets.all(10.0),
@@ -40,16 +44,19 @@ class FarmersortedHomePageTile extends StatelessWidget {
         children: [
           GestureDetector(
             onTap: () {
-              Get.to(() => ProductListedPage(farmerId: farmerIdentifyer,farmerImage: imageString,farmerName:name));
+              Get.to(() => ProductListedPage(
+                  farmerId: farmerIdentifyer,
+                  farmerImage: imageString,
+                  farmerName: name));
             },
             child: Container(
               height: 150.0,
               width: double.maxFinite,
               decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(10.0),
+                  border: Border.all(color: Colors.blue, width: 1.0),
                   image: DecorationImage(
-                      image: NetworkImage(imageString),
-                      fit: BoxFit.cover)),
+                      image: NetworkImage(imageString), fit: BoxFit.cover)),
             ),
           ),
           const SizedBox(

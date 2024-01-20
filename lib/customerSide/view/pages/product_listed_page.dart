@@ -5,6 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:harvest_delivery/customerSide/controller/product_list_page_controller.dart';
 import 'package:harvest_delivery/customerSide/models/market_product_data_model.dart';
 import 'package:harvest_delivery/customerSide/view/components/product_list_page_tile.dart';
+import 'package:harvest_delivery/customerSide/view/pages/farmersorted_home_page.dart';
+import 'package:harvest_delivery/customerSide/view/pages/home_page.dart';
+import 'package:harvest_delivery/customerSide/view/pages/main_page.dart';
 import 'package:harvest_delivery/main.dart';
 
 class ProductListedPage extends StatefulWidget {
@@ -37,6 +40,7 @@ class _ProductListedPageState extends State<ProductListedPage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: AppBar(
+        leading: IconButton(onPressed: (){Get.to(()=>CustomerMainPage());},icon: Icon(Icons.arrow_back_ios_new_rounded),),
         systemOverlayStyle: SystemUiOverlayStyle.dark,
         elevation: 0.0,
         backgroundColor: Colors.transparent,
@@ -91,6 +95,9 @@ class _ProductListedPageState extends State<ProductListedPage> {
                       "${harvestDateNeeded.year}/${harvestDateNeeded.month}/${harvestDateNeeded.day}";
                   print("Product list id: ${farmerProduct.productId}");
                   return ProductListedPageTile(
+                    farmerImg: widget.farmerImage,
+                    farmerName: widget.farmerName,
+                    farmerID: farmerProduct.farmerId,
                     harvestDate: formattedDate,
                     unit: farmerProduct.unit,
                     price: farmerProduct.price,

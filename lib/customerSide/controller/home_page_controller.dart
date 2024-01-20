@@ -4,31 +4,37 @@ import 'package:get/get.dart';
 import 'package:harvest_delivery/customerSide/data/repositories/cart_products_repository.dart';
 import 'package:harvest_delivery/customerSide/data/repositories/market_products_repository.dart';
 
+import '../../common/controller/authFunctions.dart';
 import 'cart_page_controller.dart';
 import '../models/market_product_data_model.dart';
 
 class HomePageController extends GetxController {
-  final MarketProductsRepository _market_repository =
-      MarketProductsRepository();
+  final MarketProductsRepository _marketRepository = MarketProductsRepository();
 
   late BuildContext context;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-  final CartPageController cartController = Get.put(CartPageController());
-  late BuildContext homecontext;
-  static HomePageController instance =
-      Get.find<HomePageController>(); // Add this line
+  late final CartPageController cartController; // Declare but don't initialize here
+
+  late BuildContext homeContext;
+  static HomePageController instance = Get.find<HomePageController>();
 
   final RxList<MarketProductDataModel> marketItems = <MarketProductDataModel>[].obs;
-
   final RxInt selectedTabIndex = 0.obs;
   final RxString searchValue = ''.obs;
 
+  @override
+  void onInit() {
+    super.onInit();
+    String customerId = AuthServices().getCurrentUser()?.uid ?? 'yourCustomerId';
+
+    cartController = CartPageController(customerId: customerId,);
+  }
+
   Future<void> fetchMarketData() async {
     try {
-      print("fetching market data");
-      List<MarketProductDataModel> fetchedItems =
-          await _market_repository.fetchMarketItems();
+      print("Fetching market data");
+      List<MarketProductDataModel> fetchedItems = await _marketRepository.fetchMarketItems();
       marketItems.assignAll(fetchedItems);
     } catch (e) {
       print("Error fetching market items: $e");
@@ -38,8 +44,8 @@ class HomePageController extends GetxController {
   void cartAddBtnPressed(int index, double qty) {
     MarketProductDataModel productToAdd = marketItems[index];
 
-    //TODO: implement add to cart
-    //cartController.addToCart(productToAdd);
+    // TODO: implement add to cart
+    // cartController.addToCart(productToAdd);
 
     showSnackBar();
   }
@@ -57,8 +63,7 @@ class HomePageController extends GetxController {
       return marketItems;
     } else {
       return marketItems
-          .where((product) =>
-              product.name.toLowerCase().contains(searchValue.toLowerCase()))
+          .where((product) => product.name.toLowerCase().contains(searchValue.toLowerCase()))
           .toList();
     }
   }

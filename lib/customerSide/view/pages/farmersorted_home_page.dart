@@ -34,6 +34,7 @@ class _FarmerSortedCustomerHomePageState
           FarmerDataModel farmer = farmerList[index];
 
           return FarmersortedHomePageTile(
+            farmerImg: farmer.imgUrl,
             farmerIdentifyer: farmer.id,
             name: farmer.name,
             address: farmer.address,

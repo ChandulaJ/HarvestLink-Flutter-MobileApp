@@ -1,25 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
-import 'package:harvest_delivery/customerSide/view/components/cart_tile.dart';
-import 'package:harvest_delivery/customerSide/controller/cart_page_controller.dart';
-import '../../models/market_product_data_model.dart';
-import '../components/empty_cart.dart';
-import '../components/filled_cart.dart';
-import 'checkout_page.dart';
+
+import '../../controller/cart_page_controller.dart';
+
 
 class CartPage extends StatelessWidget {
-  final CartPageController cartController = Get.put(CartPageController());
+  final String customerId;
+
+  const CartPage({Key? key, required this.customerId}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: Center(
-        child: Obx(() {
-          
-
-          return cartController.cartItems.isEmpty ? EmptyCart() : FilledCart();
-        }),
-      ),
-    );
+    return CartPageController(customerId: customerId);
   }
 }
