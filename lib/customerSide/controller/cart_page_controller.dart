@@ -54,7 +54,7 @@ class _CartPageControllerState extends State<CartPageController> {
                     return ListTile(
                       title: Text(cartItems[index].productName),
                       subtitle: Text(
-                          'Price: \$${cartItems[index].netPrice.toStringAsFixed(2)}'),
+                          'Price:  LKR ${cartItems[index].netPrice.toStringAsFixed(2)}'),
                       trailing:
                           Text('Quantity: ${cartItems[index].productQuantity}'),
                     );

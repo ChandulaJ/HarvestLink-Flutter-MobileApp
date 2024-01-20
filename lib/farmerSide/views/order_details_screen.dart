@@ -23,7 +23,10 @@ class OrderDetailsScreen extends StatelessWidget {
               children: [
                 Text(
                   label,
-                  style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold, color: Colors.black87),
+                  style: TextStyle(
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black87),
                 ),
                 Text(
                   value,
@@ -52,11 +55,14 @@ class OrderDetailsScreen extends StatelessWidget {
         backgroundColor: MyApp.primaryColor,
       ),
       body: FutureBuilder<DocumentSnapshot>(
-        future: FirebaseFirestore.instance.collection('Orders').doc(orderId).get(),
+        future:
+            FirebaseFirestore.instance.collection('Orders').doc(orderId).get(),
         builder: (context, snapshot) {
           try {
             if (snapshot.hasError) {
-              return Center(child: Text('Something went wrong', style: TextStyle(color: Colors.red)));
+              return Center(
+                  child: Text('Something went wrong',
+                      style: TextStyle(color: Colors.red)));
             }
 
             if (snapshot.connectionState == ConnectionState.waiting) {
@@ -66,7 +72,8 @@ class OrderDetailsScreen extends StatelessWidget {
 
             Future<Map<String, dynamic>> getCustomerDetails() async {
               try {
-                DocumentSnapshot customerSnapshot = await FirebaseFirestore.instance
+                DocumentSnapshot customerSnapshot = await FirebaseFirestore
+                    .instance
                     .collection('Customers')
                     .doc(orderData['CustomerId'])
                     .get();
@@ -88,8 +95,10 @@ class OrderDetailsScreen extends StatelessWidget {
               return totalAmount;
             }
 
-            DateTime orderDateTime = (orderData['DateTime'] as Timestamp).toDate();
-            String formattedDateTime = DateFormat('yyyy-MM-dd HH:mm:ss').format(orderDateTime);
+            DateTime orderDateTime =
+                (orderData['DateTime'] as Timestamp).toDate();
+            String formattedDateTime =
+                DateFormat('yyyy-MM-dd HH:mm:ss').format(orderDateTime);
 
             return Padding(
               padding: const EdgeInsets.all(16.0),
@@ -101,24 +110,32 @@ class OrderDetailsScreen extends StatelessWidget {
                     FutureBuilder<Map<String, dynamic>>(
                       future: getCustomerDetails(),
                       builder: (context, customerSnapshot) {
-                        String customerName = customerSnapshot.data?['Name'] ?? 'N/A';
-                        String customerAddress = customerSnapshot.data?['Address'] ?? 'N/A';
-                        String customerPhone = customerSnapshot.data?['Phone number'] ?? 'N/A';
+                        String customerName =
+                            customerSnapshot.data?['Name'] ?? 'N/A';
+                        String customerAddress =
+                            customerSnapshot.data?['Address'] ?? 'N/A';
+                        String customerPhone =
+                            customerSnapshot.data?['Phone number'] ?? 'N/A';
 
                         return Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            _buildDetailRow(Icons.person, 'Customer Name:', customerName),
-                            _buildDetailRow(Icons.location_on, 'Customer Address:', customerAddress),
-                            _buildDetailRow(Icons.phone, 'Customer Phone:', customerPhone),
+                            _buildDetailRow(
+                                Icons.person, 'Customer Name:', customerName),
+                            _buildDetailRow(Icons.location_on,
+                                'Customer Address:', customerAddress),
+                            _buildDetailRow(
+                                Icons.phone, 'Customer Phone:', customerPhone),
                             SizedBox(height: 12),
                           ],
                         );
                       },
                     ),
                     Divider(color: Colors.grey),
-                    _buildDetailRow(Icons.date_range, 'Order Date and Time:', formattedDateTime),
-                    _buildDetailRow(Icons.category, 'Order Status:', orderData['Status'] ?? 'N/A'),
+                    _buildDetailRow(Icons.date_range, 'Order Date and Time:',
+                        formattedDateTime),
+                    _buildDetailRow(Icons.category, 'Order Status:',
+                        orderData['Status'] ?? 'N/A'),
                     Divider(color: Colors.grey),
                     SizedBox(height: 4),
                     SingleChildScrollView(
@@ -127,24 +144,39 @@ class OrderDetailsScreen extends StatelessWidget {
                         columnSpacing: 16,
                         columns: [
                           DataColumn(
-                              label: Text('Product', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                              label: Text('Product',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold))),
                           DataColumn(
-                              label: Text('Qty', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                              label: Text('Qty',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold))),
                           DataColumn(
-                              label: Text('Unit Price (Rs.)', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                              label: Text('Unit Price (Rs.)',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold))),
                           DataColumn(
-                              label: Text('Amount (Rs.)', style: TextStyle(fontSize: 15, fontWeight: FontWeight.bold))),
+                              label: Text('Amount (Rs.)',
+                                  style: TextStyle(
+                                      fontSize: 15,
+                                      fontWeight: FontWeight.bold))),
                         ],
                         rows: items.map<DataRow>((item) {
                           String productId = item['ProductId'] as String;
 
-                          Future<Map<String, dynamic>> getProductDetails() async {
+                          Future<Map<String, dynamic>>
+                              getProductDetails() async {
                             try {
-                              DocumentSnapshot productSnapshot = await FirebaseFirestore.instance
-                                  .collection('MarketProducts')
-                                  .doc(productId)
-                                  .get();
-                              return productSnapshot.data() as Map<String, dynamic>;
+                              DocumentSnapshot productSnapshot =
+                                  await FirebaseFirestore.instance
+                                      .collection('MarketProducts')
+                                      .doc(productId)
+                                      .get();
+                              return productSnapshot.data()
+                                  as Map<String, dynamic>;
                             } catch (e) {
                               print('Error fetching product details: $e');
                               return {};
@@ -159,19 +191,29 @@ class OrderDetailsScreen extends StatelessWidget {
                                   child: FutureBuilder<Map<String, dynamic>>(
                                     future: getProductDetails(),
                                     builder: (context, productSnapshot) {
-                                      String productName = productSnapshot.data?['Name'] ?? 'N/A';
-                                      String unit = productSnapshot.data?['Unit'] ?? 'N/A';
+                                      String productName =
+                                          productSnapshot.data?['Name'] ??
+                                              'N/A';
+                                      String unit =
+                                          productSnapshot.data?['Unit'] ??
+                                              'N/A';
 
                                       return Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
                                         children: [
                                           Text(
                                             productName,
-                                            style: TextStyle(fontSize: 15, color: Colors.black),
+                                            style: TextStyle(
+                                                fontSize: 15,
+                                                color: Colors.black),
                                           ),
                                           Text(
                                             '($unit)',
-                                            style: TextStyle(fontSize: 14, color: const Color.fromARGB(255, 136, 136, 136)),
+                                            style: TextStyle(
+                                                fontSize: 14,
+                                                color: const Color.fromARGB(
+                                                    255, 136, 136, 136)),
                                           ),
                                         ],
                                       );
@@ -184,7 +226,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                   alignment: Alignment.centerRight,
                                   child: Text(
                                     '${item['Quantity']}',
-                                    style: TextStyle(fontSize: 15, color: Colors.black),
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.black),
                                   ),
                                 ),
                               ),
@@ -194,11 +237,13 @@ class OrderDetailsScreen extends StatelessWidget {
                                   child: FutureBuilder<Map<String, dynamic>>(
                                     future: getProductDetails(),
                                     builder: (context, productSnapshot) {
-                                      double unitPrice = item['UnitPrice'] ?? 0.0;
+                                      double unitPrice =
+                                          item['UnitPrice'] ?? 0.0;
 
                                       return Text(
                                         '${unitPrice.toStringAsFixed(2)}',
-                                        style: TextStyle(fontSize: 15, color: Colors.black),
+                                        style: TextStyle(
+                                            fontSize: 15, color: Colors.black),
                                       );
                                     },
                                   ),
@@ -209,7 +254,8 @@ class OrderDetailsScreen extends StatelessWidget {
                                   alignment: Alignment.centerRight,
                                   child: Text(
                                     '${((item['Quantity'] as int) * (item['UnitPrice'] as double)).toStringAsFixed(2)}',
-                                    style: TextStyle(fontSize: 15, color: Colors.black),
+                                    style: TextStyle(
+                                        fontSize: 15, color: Colors.black),
                                   ),
                                 ),
                               ),
@@ -221,8 +267,11 @@ class OrderDetailsScreen extends StatelessWidget {
                     SizedBox(height: 20),
                     Center(
                       child: Text(
-                        'Total Amount: \Rs. ${calculateTotalAmount().toStringAsFixed(2)}',
-                        style: TextStyle(fontSize: 18, fontWeight: FontWeight.bold, color: MyApp.ternaryColor),
+                        'Total Amount: Rs. ${calculateTotalAmount().toStringAsFixed(2)}',
+                        style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.bold,
+                            color: MyApp.ternaryColor),
                       ),
                     ),
                     SizedBox(height: 20),
@@ -232,7 +281,9 @@ class OrderDetailsScreen extends StatelessWidget {
             );
           } catch (e) {
             print('Error in FutureBuilder: $e');
-            return Center(child: Text('Something went wrong', style: TextStyle(color: Colors.red)));
+            return Center(
+                child: Text('Something went wrong',
+                    style: TextStyle(color: Colors.red)));
           }
         },
       ),

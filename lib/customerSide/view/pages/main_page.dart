@@ -4,6 +4,7 @@ import 'package:easy_search_bar/easy_search_bar.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:harvest_delivery/common/controller/authFunctions.dart';
 import 'package:harvest_delivery/customerSide/view/pages/farmersorted_home_page.dart';
+import 'package:harvest_delivery/main.dart';
 
 import '../../controller/home_page_controller.dart';
 import 'account_page.dart';
@@ -26,7 +27,7 @@ class _CustomerMainPageState extends State<CustomerMainPage> {
       appBar: PreferredSize(
           preferredSize: Size.fromHeight(kToolbarHeight),
           child: AppBar(
-            backgroundColor: Colors.blue,
+            backgroundColor: MyApp.primaryColor,
             title: Text(
               'Harvest~Link',
               style: GoogleFonts.montserratAlternates(
