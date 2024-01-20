@@ -1,48 +1,65 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:get/get.dart';
-import 'package:harvest_delivery/customerSide/models/cart_product_data_model.dart';
-
+import 'package:flutter/material.dart';
 import '../data/repositories/cart_products_repository.dart';
-import '../models/market_product_data_model.dart';
+import '../models/cart_product_data_model.dart';
 
-class CartPageController {
-  final CartProductsRepository _cartRepository = CartProductsRepository();
-  final RxList<CartProductDataModel> cartItems = <CartProductDataModel>[].obs;
+class CartPageController extends StatefulWidget {
+  final String customerId;
 
- 
+  const CartPageController({Key? key, required this.customerId})
+      : super(key: key);
 
   @override
-  onInit() {
-    fetchCartData();
+  _CartPageControllerState createState() => _CartPageControllerState();
+}
+
+class _CartPageControllerState extends State<CartPageController> {
+  late List<CartProductDataModel> cartItems = [];
+
+  @override
+  void initState() {
+    super.initState();
+    fetchCartItems();
   }
 
-  Future<void> addToCart(CartProductDataModel product) async {
+  Future<void> fetchCartItems() async {
     try {
-      await _cartRepository.addToCart(product);
-      fetchCartData();
+      List<CartProductDataModel> fetchedCartItems =
+          await CartProductRepository.getCustomerCart(widget.customerId);
+      setState(() {
+        cartItems = fetchedCartItems;
+      });
     } catch (e) {
-      print("Error adding to cart: $e");
+      // Handle error
+      print('Error fetching cart items: $e');
     }
   }
 
-  Future<void> removeFromCart(CartProductDataModel product) async {
-    try {
-      await _cartRepository.removeFromCart(product);
-      fetchCartData();
-    } catch (e) {
-      print("Error removing from cart: $e");
-    }
-  }
-
-  Future<void> fetchCartData() async {
-    try {
-      List<CartProductDataModel> fetchedItems =
-          await _cartRepository.fetchCartItems();
-      cartItems.assignAll(fetchedItems);
-    } catch (e) {
-      print("Error fetching cart items: $e");
-      // Return an empty list or another default value in case of an exception
-    }
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text('Cart'),
+      ),
+      body: cartItems == null
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : cartItems.isEmpty
+              ? Center(
+                  child: Text('Cart is empty.'),
+                )
+              : ListView.builder(
+                  itemCount: cartItems.length,
+                  itemBuilder: (context, index) {
+                    return ListTile(
+                      title: Text(cartItems[index].productName),
+                      subtitle: Text(
+                          'Price: \$${cartItems[index].netPrice.toStringAsFixed(2)}'),
+                      trailing:
+                          Text('Quantity: ${cartItems[index].productQuantity}'),
+                    );
+                  },
+                ),
+    );
   }
 }

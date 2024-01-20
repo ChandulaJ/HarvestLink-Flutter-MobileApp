@@ -46,12 +46,14 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
   Future<void> addToCart(
       {required String productId,
       required double pricePerUnit,
-      required int productQuantity}) async {
+      required int productQuantity,
+      required String productName}) async {
     try {
       final String customerId = AuthServices().getCurrentUser()?.uid ?? "";
       final netPrice = pricePerUnit * productQuantity;
       final marketProductsRepository = MarketProductsRepository();
       final int stockqty = widget.stkQuantity - productQuantity;
+      
       await marketProductsRepository.updateStockQuantity(productId, stockqty);
 
       await CustomerRepository.addToCustomerCart(
@@ -59,7 +61,8 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
           productId: productId,
           netPrice: netPrice,
           productQuantity: productQuantity,
-          unitPrice: pricePerUnit);
+          productName: productName
+        );
 
       // Show a success message or navigate to the cart page
       Get.snackbar('Success', 'Item added to cart successfully');
@@ -189,7 +192,8 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
                   await addToCart(
                       productId: widget.productId,
                       pricePerUnit: widget.pricePerUnit,
-                      productQuantity: buycount.value);
+                      productQuantity: buycount.value,
+                      productName: widget.name);
                 },
                 child: Text(
                   'Add $buycount to cart - LKR ${buycount * widget.pricePerUnit}',

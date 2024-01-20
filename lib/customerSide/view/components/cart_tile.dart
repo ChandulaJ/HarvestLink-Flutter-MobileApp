@@ -4,7 +4,7 @@
     final String img;
     final String productName;
     final double price;
-    final double quantity;
+    final int quantity;
 
     const CartTile({
       Key? key,
