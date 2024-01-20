@@ -67,13 +67,12 @@ class ProductListedPageTile extends StatelessWidget {
               ),
               IconButton(
                 onPressed: () {
-                  productListPageController.updateStockQuantity(stockQuantity);
                   Get.to(
                     () => ProductAddToCartPage(
                        productId:productID,
                         img: imageUrl,
                         pricePerUnit: price,
-                        stkQuantity: productListPageController.stockQuantity.value,
+                        stkQuantity: stockQuantity,
                         name: productName,
                         unit: unit),
                   );
