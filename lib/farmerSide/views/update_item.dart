@@ -156,10 +156,7 @@ class _UpdateItemState extends State<UpdateItem> {
                 harvestedDate = timestamp.toDate();
                 pickedDateTextController.text =
                     DateFormat('yyyy-MM-dd').format(harvestedDate);
-              } else {
-                // Handle the case when 'HarvestedDate' is null
-                // You can assign a default value or perform some other logic
-              }
+              } 
 
               Harvest harvest = Harvest(
                 produceId: widget.id,

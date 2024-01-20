@@ -107,7 +107,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white, // Choose a contrasting text color
+                          color: Colors.white, 
                         ),
                       ),
                       Text(
@@ -115,7 +115,7 @@ class _HomeScreenState extends State<HomeScreen> {
                         style: TextStyle(
                           fontSize: 25,
                           fontWeight: FontWeight.bold,
-                          color: Colors.white, // Choose a contrasting text color
+                          color: Colors.white,
                         ),
                       ),
                     ],
@@ -190,17 +190,17 @@ class _HomeScreenState extends State<HomeScreen> {
                         yValueMapper: (data, _) => data.count,
                         dataLabelSettings: DataLabelSettings(isVisible: true),
                         pointColorMapper: (data, _) {
-                          // Return the desired color based on the status
+                          
                           if (data.status == 'Pending') {
-                            return Color.fromARGB(255, 185, 173, 83); // Set your desired color for 'Pending'
+                            return Color.fromARGB(255, 185, 173, 83); 
                           } else if (data.status == 'Accepted') {
-                            return Color.fromARGB(255, 60, 141, 122); // Set your desired color for 'Accepted'
+                            return Color.fromARGB(255, 60, 141, 122); 
                           } else if (data.status == 'Delivered') {
-                            return Color.fromARGB(255, 86, 100, 155); // Set your desired color for 'Delivered'
+                            return Color.fromARGB(255, 86, 100, 155); 
                           } else if (data.status == 'Cancelled') {
-                            return Color.fromARGB(97, 173, 116, 93); // Set your desired color for 'Cancelled'
+                            return Color.fromARGB(97, 173, 116, 93); 
                           }
-                          return Colors.grey; // Set a default color
+                          return Colors.grey; 
                         },
                       )
                       ],

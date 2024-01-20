@@ -43,7 +43,7 @@ class _ItemScreenState extends State<ItemScreen> {
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(false),
                 style: ElevatedButton.styleFrom(
-                  backgroundColor: Colors.grey, // Change button color here
+                  backgroundColor: Colors.grey, 
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -57,7 +57,7 @@ class _ItemScreenState extends State<ItemScreen> {
               ElevatedButton(
                 onPressed: () => Navigator.of(context).pop(true),
                 style: ElevatedButton.styleFrom(
-                  primary: Colors.red, // Change button color here
+                  primary: Colors.red,
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(8.0),
                   ),
@@ -103,10 +103,10 @@ class _ItemScreenState extends State<ItemScreen> {
           ),
         ),
         automaticallyImplyLeading: false,
-        backgroundColor: const Color.fromARGB(255, 240, 240, 240), // Light grey
+        backgroundColor: const Color.fromARGB(255, 240, 240, 240),
       ),
       body: Container(
-        color: const Color.fromARGB(255, 240, 240, 240), // Light grey
+        color: const Color.fromARGB(255, 240, 240, 240), 
         child: StreamBuilder<QuerySnapshot>(
           stream: itemsStream,
           builder: (context, snapshot) {
@@ -174,7 +174,7 @@ class _ItemScreenState extends State<ItemScreen> {
                           ),
                           child: Icon(Icons.edit_outlined, color: Colors.white),
                           style: ElevatedButton.styleFrom(
-                            backgroundColor: MyApp.secondaryColor, // Use your app's primary color here
+                            backgroundColor: MyApp.secondaryColor, 
                             shape: CircleBorder(),
                             padding: EdgeInsets.all(10),
                           ),
