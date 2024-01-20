@@ -7,6 +7,7 @@ import 'package:harvest_delivery/customerSide/view/pages/product_add_to_cart_pag
 
 class ProductListedPageTile extends StatelessWidget {
   final ProductListPageController productListPageController = Get.find();
+  final String farmerID;
   final String productID;
   final String harvestDate;
   final String unit;
@@ -14,9 +15,14 @@ class ProductListedPageTile extends StatelessWidget {
   final String imageUrl;
   final String productName;
   final int  stockQuantity;
+  final String farmerName;
+  final String farmerImg;
 
   ProductListedPageTile({
     Key? key,
+    required this.farmerImg,
+    required this.farmerName,
+    required this.farmerID,
     required this.harvestDate,
     required this.unit,
     required this.price,
@@ -69,6 +75,9 @@ class ProductListedPageTile extends StatelessWidget {
                 onPressed: () {
                   Get.to(
                     () => ProductAddToCartPage(
+                      farmerImg: farmerImg,
+                      farmerName: farmerName,
+                      farmerId:farmerID,
                        productId:productID,
                         img: imageUrl,
                         pricePerUnit: price,

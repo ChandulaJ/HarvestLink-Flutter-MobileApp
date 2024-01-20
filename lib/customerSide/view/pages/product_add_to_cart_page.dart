@@ -5,7 +5,7 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:harvest_delivery/common/controller/authFunctions.dart';
 import 'package:harvest_delivery/customerSide/data/repositories/customer_repository.dart';
 import 'package:harvest_delivery/customerSide/data/repositories/market_products_repository.dart';
-import 'package:harvest_delivery/farmerSide/models/customer.dart';
+import 'package:harvest_delivery/customerSide/view/pages/product_listed_page.dart';
 
 import '../components/product_counter.dart';
 
@@ -16,15 +16,22 @@ class ProductAddToCartPage extends StatefulWidget {
   final int stkQuantity;
   final String name;
   final String unit;
+  final String farmerId;
+  final String farmerName;
+  final String farmerImg;
 
   const ProductAddToCartPage({
     super.key,
+    required this.farmerImg,
     required this.img,
     required this.productId,
     required this.pricePerUnit,
     required this.stkQuantity,
     required this.name,
     required this.unit,
+    required this.farmerId,
+    required this.farmerName,
+
     //required this.productId
   });
 
@@ -34,6 +41,7 @@ class ProductAddToCartPage extends StatefulWidget {
 
 class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
   RxInt buycount = 0.obs;
+  RxInt stockQuantity = 0.obs;
 
   Future<void> addToCart(
       {required String productId,
@@ -45,8 +53,6 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
       final marketProductsRepository = MarketProductsRepository();
       final int stockqty = widget.stkQuantity - productQuantity;
       await marketProductsRepository.updateStockQuantity(productId, stockqty);
-         
-   
 
       await CustomerRepository.addToCustomerCart(
           customerId: customerId,
@@ -57,12 +63,34 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
 
       // Show a success message or navigate to the cart page
       Get.snackbar('Success', 'Item added to cart successfully');
-
-      Navigator.of(context).pop();
+      Get.to(ProductListedPage(
+          farmerId: widget.farmerId,
+          farmerName: widget.farmerName,
+          farmerImage: widget.farmerImg));
+     // Navigator.of(context).pop();
     } catch (e) {
       // Handle the error
       Get.snackbar('Error', 'Failed to add item to cart: $e');
-      Navigator.of(context).pop();
+      Get.to(ProductListedPage(
+          farmerId: widget.farmerId,
+          farmerName: widget.farmerName,
+          farmerImage: widget.farmerImg));
+     // Navigator.of(context).pop();
+    }
+  }
+
+  Future<void> fetchUpdatedStockQuantity(String productId) async {
+    try {
+      final marketProductsRepository = MarketProductsRepository();
+      final updatedStockQuantity =
+          await marketProductsRepository.getStockQuantity(productId);
+
+      setState(() {
+        stockQuantity.value = updatedStockQuantity;
+      });
+    } catch (e) {
+      // Handle error if unable to fetch updated stock quantity
+      print('Error fetching updated stock quantity: $e');
     }
   }
 
@@ -152,15 +180,16 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
               child: FilledButton(
                 onPressed: () async {
                   if (buycount.value == 0) {
-                    Navigator.of(context).pop();
+                    Get.to(ProductListedPage(
+                        farmerId: widget.farmerId,
+                        farmerName: widget.farmerName,
+                        farmerImage: widget.farmerImg));
                     return;
                   }
                   await addToCart(
                       productId: widget.productId,
                       pricePerUnit: widget.pricePerUnit,
                       productQuantity: buycount.value);
-                      
-                  
                 },
                 child: Text(
                   'Add $buycount to cart - LKR ${buycount * widget.pricePerUnit}',

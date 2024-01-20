@@ -23,6 +23,29 @@ class MarketProductsRepository {
     }
   }
 
+  Future<int> getStockQuantity(String productId) async {
+    try {
+      // Assume you have a 'products' collection in Firestore
+      // and each document has a 'stockQuantity' field
+      final DocumentSnapshot<Map<String, dynamic>> productSnapshot =
+      await _firestore.collection('products').doc(productId).get();
+
+      if (productSnapshot.exists) {
+        // Get the stockQuantity from the document
+        final int stockQuantity = productSnapshot['stockQuantity'] ?? 0;
+        return stockQuantity;
+      } else {
+        // Product not found
+        return 0;
+      }
+    } catch (e) {
+      print('Error getting stock quantity: $e');
+      throw e;
+    }
+  }
+
+
+
   Future<List<MarketProductDataModel>> fetchMarketItemsByFarmerId(
       String farmerId) async {
     try {

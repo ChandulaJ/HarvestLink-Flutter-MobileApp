@@ -91,6 +91,9 @@ class _ProductListedPageState extends State<ProductListedPage> {
                       "${harvestDateNeeded.year}/${harvestDateNeeded.month}/${harvestDateNeeded.day}";
                   print("Product list id: ${farmerProduct.productId}");
                   return ProductListedPageTile(
+                    farmerImg: widget.farmerImage,
+                    farmerName: widget.farmerName,
+                    farmerID: farmerProduct.farmerId,
                     harvestDate: formattedDate,
                     unit: farmerProduct.unit,
                     price: farmerProduct.price,
