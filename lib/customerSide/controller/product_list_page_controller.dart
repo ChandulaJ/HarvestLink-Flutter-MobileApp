@@ -6,6 +6,7 @@ import 'package:harvest_delivery/customerSide/models/market_product_data_model.d
 class ProductListPageController extends GetxController{
   static ProductListPageController get instance => Get.find();
   final marketProductsRepository = Get.put(MarketProductsRepository());
+  RxInt stockQuantity = 0.obs;
 
   RxList<MarketProductDataModel> farmerProducts = <MarketProductDataModel>[].obs;
 
@@ -18,5 +19,8 @@ class ProductListPageController extends GetxController{
     } catch (e) {
       SnackBar(content: Text("Error: ${e.toString()}"),);
     }
+  }
+  void updateStockQuantity(int newQuantity) {
+    stockQuantity.value = newQuantity;
   }
 }

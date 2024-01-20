@@ -7,9 +7,11 @@ import 'package:harvest_delivery/customerSide/data/repositories/customer_reposit
 import 'package:harvest_delivery/customerSide/data/repositories/market_products_repository.dart';
 import 'package:harvest_delivery/farmerSide/models/customer.dart';
 
+import '../../controller/product_list_page_controller.dart';
 import '../components/product_counter.dart';
 
 class ProductAddToCartPage extends StatefulWidget {
+
   final String productId;
   final String img;
   final double pricePerUnit;
@@ -17,7 +19,7 @@ class ProductAddToCartPage extends StatefulWidget {
   final String name;
   final String unit;
 
-  const ProductAddToCartPage({
+   ProductAddToCartPage({
     super.key,
     required this.img,
     required this.productId,
@@ -33,6 +35,7 @@ class ProductAddToCartPage extends StatefulWidget {
 }
 
 class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
+  final ProductListPageController productListPageController = Get.find();
   RxInt buycount = 0.obs;
 
   Future<void> addToCart(
@@ -45,6 +48,7 @@ class _ProductAddToCartPageState extends State<ProductAddToCartPage> {
       final marketProductsRepository = MarketProductsRepository();
       final int stockqty = widget.stkQuantity - productQuantity;
       await marketProductsRepository.updateStockQuantity(productId, stockqty);
+      productListPageController.updateStockQuantity(stockqty);
          
    
 
